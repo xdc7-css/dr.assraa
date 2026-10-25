@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMAV | مقارنة جودة النطق والسرعات الصوتية</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .compare-container {
+      max-width: 1000px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .sample-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .sample-category {
+      font-size: 0.85rem;
+      color: var(--accent-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .sample-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 10px 0 16px;
+      color: var(--text-primary);
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.6);
+      border-right: 4px solid var(--accent-gold);
+      border-radius: var(--radius-sm);
+    }
+    .variants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .variant-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .variant-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .variant-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 12px;
+    }
+    .variant-box audio {
+      width: 100%;
+      height: 38px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+    .info-banner {
+      background: rgba(30, 58, 138, 0.4);
+      border: 1px solid #3b82f6;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      color: #bfdbfe;
+    }
+  </style>
+</head>
+<body class="theme-dark">
+  <div class="compare-container">
+    <a href="/" class="back-btn">⬅ العودة إلى الواجهة الرئيسية</a>
+
+    <header>
+      <h1>مقارنة جودة النطق وسرعات القراءة (TTS Evaluation)</h1>
+      <p style="color:var(--text-secondary); margin-bottom: 16px;">
+        مقارنة موضوعية مسجلة لنفس العبارات عبر إعدادات السرعة (length_scale: 1.00, 1.05, 1.10) لنموذج النطق المحلي Piper ar_JO-kareem-medium (22050 Hz).
+      </p>
+    </header>
+
+    <div class="info-banner">
+      <strong>حالة التحقق البشري:</strong> تم توليد ملفات الصوت والتحقق البرمجي من سلامة ترويسة WAV والتردد (22050 Hz) وتطابق الكلمات. التحقق السمعي المباشر يبقى قيد المراجعة البشرية الذاتية (Listening verification marked pending).
+    </div>
+
+    <!-- Directions Sample -->
+    <div class="sample-card">
+      <div class="sample-category">التوجيه المكاني والاتجاهات (Directions)</div>
+      <div class="sample-text">"توجه إلى الأمام بحذر، ثم انعطف نحو اليمين بعد خطوتين."</div>
+      <div class="variants-grid">
+        <div class="variant-box">
+          <div class="variant-header">
+            <span>السرعة العادية (1.00x)</span>
+            <span class="badge">Normal</span>
+          </div>
+          <audio controls src="/data/audio_samples/directions_normal_pace_1.00.wav"></audio>
+          <div class="variant-meta">
+            <span>المدة: 6.55 ثانية</span>
+            <span>الزمن: 1130 ms</span>
+          </div>
+        </div>
+        <div class="variant-box" style="border-color: var(--accent-gold);">
+          <div class="variant-header">
+            <span>السرعة الموصى بها (1.05x) ⭐</span>
+            <span class="badge" style="background:var(--accent-gold); color:#000;">الأمثل للمكفوفين</span>
+          </div>
+          <audio controls src="/data/audio_samples/directions_assistive_optimal_1.05.wav"></audio>
+          <div class="variant-meta">
+            <span>المدة: 6.63 ثانية</span>
+            <span>الزمن: 323 ms</span>
+          </div>
+        </div>
+        <div class="variant-box">
+          <div class="variant-header">
+            <span>السرعة المتأنية (1.10x)</span>
+            <span class="badge">Deliberate</span>
+          </div>
+          <audio controls src="/data/audio_samples/directions_deliberate_slow_1.10.wav"></audio>
+          <div class="variant-meta">
+            <span>المدة: 6.91 ثانية</span>
+            <span>الزمن: 323 ms</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Numbers Sample -->
+    <div class="sample-card">
+      <div class="sample-category">الأرقام والتواريخ (Numbers & Dates)</div>
+      <div class="sample-text">"رقم القاعة هو 204، وتاريخ اليوم هو 25 تشرين الأول 2026."</div>
+      <div class="variants-grid">
+        <div class="variant-box">
+          <div class="variant-header"><span>1.00x</span></div>
+          <audio controls src="/data/audio_samples/numbers_normal_pace_1.00.wav"></audio>
+          <div class="variant-meta"><span>10.25 ثانية</span></div>
+        </div>
+        <div class="variant-box" style="border-color: var(--accent-gold);">
+          <div class="variant-header"><span>1.05x (موصى به) ⭐</span></div>
+          <audio controls src="/data/audio_samples/numbers_assistive_optimal_1.05.wav"></audio>
+          <div class="variant-meta"><span>10.72 ثانية</span></div>
+        </div>
+        <div class="variant-box">
+          <div class="variant-header"><span>1.10x</span></div>
+          <audio controls src="/data/audio_samples/numbers_deliberate_slow_1.10.wav"></audio>
+          <div class="variant-meta"><span>10.77 ثانية</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Objects Sample -->
+    <div class="sample-card">
+      <div class="sample-category">أسماء الكائنات اليومية (Object Names)</div>
+      <div class="sample-text">"أمامك طاولة عليها حاسوب محمول، وقنينة ماء زرقاء، وكوب قهوة."</div>
+      <div class="variants-grid">
+        <div class="variant-box">
+          <div class="variant-header"><span>1.00x</span></div>
+          <audio controls src="/data/audio_samples/objects_normal_pace_1.00.wav"></audio>
+          <div class="variant-meta"><span>8.06 ثانية</span></div>
+        </div>
+        <div class="variant-box" style="border-color: var(--accent-gold);">
+          <div class="variant-header"><span>1.05x (موصى به) ⭐</span></div>
+          <audio controls src="/data/audio_samples/objects_assistive_optimal_1.05.wav"></audio>
+          <div class="variant-meta"><span>8.66 ثانية</span></div>
+        </div>
+        <div class="variant-box">
+          <div class="variant-header"><span>1.10x</span></div>
+          <audio controls src="/data/audio_samples/objects_deliberate_slow_1.10.wav"></audio>
+          <div class="variant-meta"><span>8.86 ثانية</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mixed Script Sample -->
+    <div class="sample-card">
+      <div class="sample-category">المصطلحات المختلطة والرموز (Mixed Script & Codes)</div>
+      <div class="sample-text">"مختبر الحاسوب والذكاء الاصطناعي في مبنى AMAV Room 102."</div>
+      <div class="variants-grid">
+        <div class="variant-box">
+          <div class="variant-header"><span>1.00x</span></div>
+          <audio controls src="/data/audio_samples/mixed_script_normal_pace_1.00.wav"></audio>
+          <div class="variant-meta"><span>6.79 ثانية</span></div>
+        </div>
+        <div class="variant-box" style="border-color: var(--accent-gold);">
+          <div class="variant-header"><span>1.05x (موصى به) ⭐</span></div>
+          <audio controls src="/data/audio_samples/mixed_script_assistive_optimal_1.05.wav"></audio>
+          <div class="variant-meta"><span>6.78 ثانية</span></div>
+        </div>
+        <div class="variant-box">
+          <div class="variant-header"><span>1.10x</span></div>
+          <audio controls src="/data/audio_samples/mixed_script_deliberate_slow_1.10.wav"></audio>
+          <div class="variant-meta"><span>7.07 ثانية</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paragraph Sample -->
+    <div class="sample-card">
+      <div class="sample-category">الفقرة الوصفية الكاملة (Continuous Paragraph)</div>
+      <div class="sample-text">"أهلاً بك في نظام المساعد البصري الذكي. يمكنك سؤالي عما يوجد أمامك، أو طلب قراءة النصوص، أو البحث عن الأشياء."</div>
+      <div class="variants-grid">
+        <div class="variant-box">
+          <div class="variant-header"><span>1.00x</span></div>
+          <audio controls src="/data/audio_samples/paragraph_normal_pace_1.00.wav"></audio>
+          <div class="variant-meta"><span>13.63 ثانية</span></div>
+        </div>
+        <div class="variant-box" style="border-color: var(--accent-gold);">
+          <div class="variant-header"><span>1.05x (موصى به) ⭐</span></div>
+          <audio controls src="/data/audio_samples/paragraph_assistive_optimal_1.05.wav"></audio>
+          <div class="variant-meta"><span>14.02 ثانية</span></div>
+        </div>
+        <div class="variant-box">
+          <div class="variant-header"><span>1.10x</span></div>
+          <audio controls src="/data/audio_samples/paragraph_deliberate_slow_1.10.wav"></audio>
+          <div class="variant-meta"><span>14.16 ثانية</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

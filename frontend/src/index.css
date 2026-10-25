@@ -1,0 +1,211 @@
+/* =====================================================================
+   AMAV — Arabic Multimodal Assistive Vision
+   Design System: Restrained Academic Workspace
+   Palette: #F4F3EF (Page), #172522 (Ink), #234D43 (Forest Green), #FFFFFF (Surfaces)
+   ===================================================================== */
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/IBMPlexSansArabic-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/IBMPlexSansArabic-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/IBMPlexSansArabic-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/IBMPlexSansArabic-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Design Tokens */
+  --color-page-bg: #F4F3EF;
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: #EFECE5;
+  --color-surface-dark: #0D1413;
+
+  --color-ink-primary: #172522;
+  --color-ink-secondary: #4A5854;
+  --color-ink-muted: #6B7B77;
+  --color-ink-inverse: #F8FAF9;
+
+  --color-forest: #234D43;
+  --color-forest-hover: #1A3B34;
+  --color-forest-active: #132B25;
+  --color-forest-subtle: #EAF1EF;
+  --color-forest-border: #9BB8B1;
+
+  --color-red-stop: #C93B2B;
+  --color-red-stop-hover: #A62B1D;
+  --color-red-stop-subtle: #FBEBE9;
+  --color-red-stop-border: #F3B8B0;
+
+  --color-border-subtle: #E3E1DA;
+  --color-border-strong: #CDC9BD;
+
+  --color-focus: #234D43;
+  --color-focus-offset: 3px;
+
+  /* Typography Scale */
+  --font-family-arabic: 'IBM Plex Sans Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+  --font-size-title: clamp(1.8rem, 2.5vw, 2.25rem); /* 30-36px */
+  --font-size-section: 1.35rem; /* ~21px */
+  --font-size-controls: 1.125rem; /* ~18px */
+  --font-size-response: clamp(1.3rem, 1.8vw, 1.5rem); /* 21-24px */
+  --font-size-names: 1.05rem; /* ~16.5px */
+  --font-size-secondary: 0.95rem; /* ~15px */
+  --font-size-caption: 0.875rem; /* ~14px */
+
+  /* Spacing Scale (4, 8, 12, 16, 24, 32, 48) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Corner Radii */
+  --radius-surface: 18px;
+  --radius-control: 11px;
+  --radius-sm: 6px;
+
+  /* Restrained Shadows */
+  --shadow-surface: 0 2px 8px rgba(23, 37, 34, 0.04), 0 1px 2px rgba(23, 37, 34, 0.02);
+  --shadow-drawer: 0 12px 32px rgba(23, 37, 34, 0.12);
+}
+
+/* High Contrast Mode */
+[data-theme="high-contrast"] {
+  --color-page-bg: #000000;
+  --color-surface: #0A0A0A;
+  --color-surface-subtle: #141414;
+  --color-surface-dark: #000000;
+
+  --color-ink-primary: #FFFFFF;
+  --color-ink-secondary: #E0E0E0;
+  --color-ink-muted: #CCCCCC;
+  --color-ink-inverse: #FFFFFF;
+
+  --color-forest: #00FFCC;
+  --color-forest-hover: #33FFD6;
+  --color-forest-active: #00CC99;
+  --color-forest-subtle: #08261F;
+  --color-forest-border: #00FFCC;
+
+  --color-red-stop: #FF3333;
+  --color-red-stop-hover: #FF6666;
+  --color-red-stop-subtle: #290808;
+  --color-red-stop-border: #FF3333;
+
+  --color-border-subtle: #888888;
+  --color-border-strong: #FFFFFF;
+
+  --color-focus: #FFFF00;
+  --shadow-surface: none;
+  --shadow-drawer: 0 0 0 2px #FFFFFF;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reset & Foundation */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family-arabic);
+  background-color: var(--color-page-bg);
+  color: var(--color-ink-primary);
+  line-height: 1.7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Visible Keyboard Focus */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: var(--color-focus-offset);
+}
+
+/* SVG Icon Helper */
+.app-svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.app-svg-lg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+/* Skip link */
+.skip-nav {
+  position: absolute;
+  top: -80px;
+  right: var(--space-6);
+  background: var(--color-forest);
+  color: #FFFFFF;
+  padding: var(--space-3) var(--space-6);
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 9999;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-nav:focus {
+  top: var(--space-4);
+}
+
+/* Container Structure (1320-1440px) */
+.app-container {
+  max-width: 1380px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 0 var(--space-4);
+  }
+}

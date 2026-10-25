@@ -1,0 +1,196 @@
+{
+  "benchmark_name": "AMAV Human Iraqi Dialect Speech Recognition & Command Success Evaluation",
+  "version": "1.0",
+  "created_at": "2026-10-25",
+  "evaluation_policy": "Transcriptions evaluated for Word Error Rate (WER) and Command Intent Routing Success Rate. Human recordings preserved with attribution.",
+  "status": "pending_manual_recording",
+  "notes": "Synthetic Piper-to-Whisper tests established pipeline functionality. This benchmark tracks genuine human Iraqi and Mesopotamian Arabic dialect commands.",
+  "trials": [
+    {
+      "id": "IRQ_CMD_01",
+      "audio_file": "data/eval/recordings/irq_01.wav",
+      "reference_arabic": "شنو قدامي؟",
+      "reference_normalized": "شنو قدامي",
+      "expected_mode": "describe",
+      "dialect": "Iraqi (Baghdadi)",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_02",
+      "audio_file": "data/eval/recordings/irq_02.wav",
+      "reference_arabic": "شنو كدامي؟",
+      "reference_normalized": "شنو كدامي",
+      "expected_mode": "describe",
+      "dialect": "Iraqi (Central)",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_03",
+      "audio_file": "data/eval/recordings/irq_03.wav",
+      "reference_arabic": "صف المشهد",
+      "reference_normalized": "صف المشهد",
+      "expected_mode": "describe",
+      "dialect": "Modern Standard Arabic (Fusha)",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_04",
+      "audio_file": "data/eval/recordings/irq_04.wav",
+      "reference_arabic": "شكو كدامي هسة؟",
+      "reference_normalized": "شكو كدامي هسه",
+      "expected_mode": "describe",
+      "dialect": "Iraqi (Baghdadi)",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_05",
+      "audio_file": "data/eval/recordings/irq_05.wav",
+      "reference_arabic": "اقرأ المكتوب",
+      "reference_normalized": "اقرا المكتوب",
+      "expected_mode": "read",
+      "dialect": "Fusha",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_06",
+      "audio_file": "data/eval/recordings/irq_06.wav",
+      "reference_arabic": "شنو مكتوب بالورقة؟",
+      "reference_normalized": "شنو مكتوب بالورقه",
+      "expected_mode": "read",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_07",
+      "audio_file": "data/eval/recordings/irq_07.wav",
+      "reference_arabic": "اقرالي هذا النص",
+      "reference_normalized": "اقرالي هذا النص",
+      "expected_mode": "read",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_08",
+      "audio_file": "data/eval/recordings/irq_08.wav",
+      "reference_arabic": "شكو مكتوب هنا؟",
+      "reference_normalized": "شكو مكتوب هنا",
+      "expected_mode": "read",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_09",
+      "audio_file": "data/eval/recordings/irq_09.wav",
+      "reference_arabic": "وين القنينة؟",
+      "reference_normalized": "وين القنينه",
+      "expected_mode": "find",
+      "expected_target": "قنينة",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_10",
+      "audio_file": "data/eval/recordings/irq_10.wav",
+      "reference_arabic": "وين الكرسي؟",
+      "reference_normalized": "وين الكرسي",
+      "expected_mode": "find",
+      "expected_target": "كرسي",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_11",
+      "audio_file": "data/eval/recordings/irq_11.wav",
+      "reference_arabic": "شوفلي وين اللابتوب؟",
+      "reference_normalized": "شوفلي وين اللابتوب",
+      "expected_mode": "find",
+      "expected_target": "لابتوب",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_12",
+      "audio_file": "data/eval/recordings/irq_12.wav",
+      "reference_arabic": "دورلي على الكوب",
+      "reference_normalized": "دورلي على الكوب",
+      "expected_mode": "find",
+      "expected_target": "كوب",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_13",
+      "audio_file": "data/eval/recordings/irq_13.wav",
+      "reference_arabic": "تلكالي الموبايل",
+      "reference_normalized": "تلكالي الموبايل",
+      "expected_mode": "find",
+      "expected_target": "موبايل",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_14",
+      "audio_file": "data/eval/recordings/irq_14.wav",
+      "reference_arabic": "وين صاير الشخص؟",
+      "reference_normalized": "وين صاير الشخص",
+      "expected_mode": "find",
+      "expected_target": "شخص",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_15",
+      "audio_file": "data/eval/recordings/irq_15.wav",
+      "reference_arabic": "كرر",
+      "reference_normalized": "كرر",
+      "expected_mode": "repeat",
+      "dialect": "Fusha",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_16",
+      "audio_file": "data/eval/recordings/irq_16.wav",
+      "reference_arabic": "عيد الجواب",
+      "reference_normalized": "عيد الجواب",
+      "expected_mode": "repeat",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_17",
+      "audio_file": "data/eval/recordings/irq_17.wav",
+      "reference_arabic": "شنو كلت ما سمعتك؟",
+      "reference_normalized": "شنو كلت ما سمعتك",
+      "expected_mode": "repeat",
+      "dialect": "Iraqi",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_18",
+      "audio_file": "data/eval/recordings/irq_18.wav",
+      "reference_arabic": "ما هو لون هذا القميص؟",
+      "reference_normalized": "ما هو لون هذا القميص",
+      "expected_mode": "ask",
+      "dialect": "Fusha",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_19",
+      "audio_file": "data/eval/recordings/irq_19.wav",
+      "reference_arabic": "كم عدد الأكواب الموجودة؟",
+      "reference_normalized": "كم عدد الاكواب الموجوده",
+      "expected_mode": "ask",
+      "dialect": "Fusha",
+      "status": "pending"
+    },
+    {
+      "id": "IRQ_CMD_20",
+      "audio_file": "data/eval/recordings/irq_20.wav",
+      "reference_arabic": "هل الطاولة قريبة مني؟",
+      "reference_normalized": "هل الطاوله قريبه مني",
+      "expected_mode": "ask",
+      "dialect": "Iraqi / Fusha",
+      "status": "pending"
+    }
+  ]
+}

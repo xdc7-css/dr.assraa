@@ -1,0 +1,194 @@
+{
+  "generated_at": "2026-10-25 11:12:44",
+  "model": "ar_JO-kareem-medium (ONNX)",
+  "sample_rate_hz": 22050,
+  "listening_verification": "files_generated_pending_human_ear_audit",
+  "note": "A non-empty WAV confirms successful synthesis, headers, and duration; human ear evaluation determines subjective prosodic naturalness.",
+  "samples": [
+    {
+      "sentence_id": "directions",
+      "category": "Directions / Spatial Guidance",
+      "text": "توجه إلى الأمام بحذر، ثم انعطف نحو اليمين بعد خطوتين.",
+      "variants": [
+        {
+          "pace_length_scale": 1.0,
+          "pace_label": "normal_pace",
+          "filename": "directions_normal_pace_1.00.wav",
+          "relative_path": "data/audio_samples/directions_normal_pace_1.00.wav",
+          "duration_seconds": 6.55,
+          "latency_ms": 1130.4,
+          "file_size_bytes": 288812,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.05,
+          "pace_label": "assistive_optimal",
+          "filename": "directions_assistive_optimal_1.05.wav",
+          "relative_path": "data/audio_samples/directions_assistive_optimal_1.05.wav",
+          "duration_seconds": 6.63,
+          "latency_ms": 323.73,
+          "file_size_bytes": 292396,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.1,
+          "pace_label": "deliberate_slow",
+          "filename": "directions_deliberate_slow_1.10.wav",
+          "relative_path": "data/audio_samples/directions_deliberate_slow_1.10.wav",
+          "duration_seconds": 6.91,
+          "latency_ms": 323.35,
+          "file_size_bytes": 304684,
+          "sample_rate": 22050
+        }
+      ]
+    },
+    {
+      "sentence_id": "numbers",
+      "category": "Numbers / Numerical Values",
+      "text": "رقم القاعة هو 204، وتاريخ اليوم هو 25 تشرين الأول 2026.",
+      "variants": [
+        {
+          "pace_length_scale": 1.0,
+          "pace_label": "normal_pace",
+          "filename": "numbers_normal_pace_1.00.wav",
+          "relative_path": "data/audio_samples/numbers_normal_pace_1.00.wav",
+          "duration_seconds": 10.25,
+          "latency_ms": 527.73,
+          "file_size_bytes": 452140,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.05,
+          "pace_label": "assistive_optimal",
+          "filename": "numbers_assistive_optimal_1.05.wav",
+          "relative_path": "data/audio_samples/numbers_assistive_optimal_1.05.wav",
+          "duration_seconds": 10.72,
+          "latency_ms": 529.74,
+          "file_size_bytes": 472620,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.1,
+          "pace_label": "deliberate_slow",
+          "filename": "numbers_deliberate_slow_1.10.wav",
+          "relative_path": "data/audio_samples/numbers_deliberate_slow_1.10.wav",
+          "duration_seconds": 10.77,
+          "latency_ms": 591.23,
+          "file_size_bytes": 475180,
+          "sample_rate": 22050
+        }
+      ]
+    },
+    {
+      "sentence_id": "objects",
+      "category": "Object Names",
+      "text": "أمامك طاولة عليها حاسوب محمول، وقنينة ماء زرقاء، وكوب قهوة.",
+      "variants": [
+        {
+          "pace_length_scale": 1.0,
+          "pace_label": "normal_pace",
+          "filename": "objects_normal_pace_1.00.wav",
+          "relative_path": "data/audio_samples/objects_normal_pace_1.00.wav",
+          "duration_seconds": 8.06,
+          "latency_ms": 401.34,
+          "file_size_bytes": 355372,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.05,
+          "pace_label": "assistive_optimal",
+          "filename": "objects_assistive_optimal_1.05.wav",
+          "relative_path": "data/audio_samples/objects_assistive_optimal_1.05.wav",
+          "duration_seconds": 8.66,
+          "latency_ms": 461.9,
+          "file_size_bytes": 381996,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.1,
+          "pace_label": "deliberate_slow",
+          "filename": "objects_deliberate_slow_1.10.wav",
+          "relative_path": "data/audio_samples/objects_deliberate_slow_1.10.wav",
+          "duration_seconds": 8.86,
+          "latency_ms": 422.94,
+          "file_size_bytes": 390700,
+          "sample_rate": 22050
+        }
+      ]
+    },
+    {
+      "sentence_id": "mixed_script",
+      "category": "Mixed Arabic and English Script",
+      "text": "مختبر الحاسوب والذكاء الاصطناعي في مبنى AMAV Room 102.",
+      "variants": [
+        {
+          "pace_length_scale": 1.0,
+          "pace_label": "normal_pace",
+          "filename": "mixed_script_normal_pace_1.00.wav",
+          "relative_path": "data/audio_samples/mixed_script_normal_pace_1.00.wav",
+          "duration_seconds": 6.79,
+          "latency_ms": 367.82,
+          "file_size_bytes": 299564,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.05,
+          "pace_label": "assistive_optimal",
+          "filename": "mixed_script_assistive_optimal_1.05.wav",
+          "relative_path": "data/audio_samples/mixed_script_assistive_optimal_1.05.wav",
+          "duration_seconds": 6.78,
+          "latency_ms": 332.06,
+          "file_size_bytes": 299052,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.1,
+          "pace_label": "deliberate_slow",
+          "filename": "mixed_script_deliberate_slow_1.10.wav",
+          "relative_path": "data/audio_samples/mixed_script_deliberate_slow_1.10.wav",
+          "duration_seconds": 7.07,
+          "latency_ms": 366.86,
+          "file_size_bytes": 311852,
+          "sample_rate": 22050
+        }
+      ]
+    },
+    {
+      "sentence_id": "paragraph",
+      "category": "Short Assistive Paragraph",
+      "text": "أهلاً بك في نظام المساعد البصري الذكي. يمكنك سؤالي عما يوجد أمامك، أو طلب قراءة النصوص، أو البحث عن الأشياء.",
+      "variants": [
+        {
+          "pace_length_scale": 1.0,
+          "pace_label": "normal_pace",
+          "filename": "paragraph_normal_pace_1.00.wav",
+          "relative_path": "data/audio_samples/paragraph_normal_pace_1.00.wav",
+          "duration_seconds": 13.63,
+          "latency_ms": 670.6,
+          "file_size_bytes": 601132,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.05,
+          "pace_label": "assistive_optimal",
+          "filename": "paragraph_assistive_optimal_1.05.wav",
+          "relative_path": "data/audio_samples/paragraph_assistive_optimal_1.05.wav",
+          "duration_seconds": 14.02,
+          "latency_ms": 662.76,
+          "file_size_bytes": 618540,
+          "sample_rate": 22050
+        },
+        {
+          "pace_length_scale": 1.1,
+          "pace_label": "deliberate_slow",
+          "filename": "paragraph_deliberate_slow_1.10.wav",
+          "relative_path": "data/audio_samples/paragraph_deliberate_slow_1.10.wav",
+          "duration_seconds": 14.16,
+          "latency_ms": 742.13,
+          "file_size_bytes": 624684,
+          "sample_rate": 22050
+        }
+      ]
+    }
+  ]
+}

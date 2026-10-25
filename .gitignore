@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+.pip_cache/
+
+# Node & Frontend dependencies
+node_modules/
+frontend/node_modules/
+frontend/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Models & Weights (Excluded from Git due to GitHub 100MB file limit)
+models/
+tools/
+
+# Cache, diagnostics, and test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+install_ollama.log
+scratch_test_ar.jpg
+amav_review_package.zip
+data/audio_samples/*.wav
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

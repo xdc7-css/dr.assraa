@@ -1,0 +1,110 @@
+{
+  "manifest_version": "1.0",
+  "last_updated": "2026-10-25T11:22:37+03:00",
+  "project_title": "Design and Development of an AI-Based Multimodal Intelligent Assistant for Assisting Blind and Visually Impaired Individuals in Real-Time Environment Recognition and Voice Interaction",
+  "models": {
+    "vlm": {
+      "component": "Multimodal Vision-Language Model (Instruct)",
+      "package": "ollama-windows",
+      "package_version": "0.40.11",
+      "model_id": "qwen3-vl:2b-instruct-q4_K_M",
+      "source_url": "https://ollama.com/library/qwen3-vl:2b-instruct-q4_K_M",
+      "reference_url": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct",
+      "revision_or_digest": "afc393e3572c07db0bc84aa460d928a16c75f3fbb9ca9e0dccc4fbd2dafb573e",
+      "storage_path": "models\\ollama",
+      "size_bytes_if_known": 1930568531,
+      "checksum_if_available": "sha256:afc393e3572c07db0bc84aa460d928a16c75f3fbb9ca9e0dccc4fbd2dafb573e",
+      "previous_preserved_tag": "qwen3-vl:2b",
+      "previous_preserved_digest": "0635d9d857d497aeadba3d7d27485746c50554446f9f6ec01ef39788221adbe8",
+      "languages": [
+        "ar",
+        "en",
+        "multilingual"
+      ],
+      "device": "gpu (NVIDIA GeForce GTX 1650 Ti - CUDA compute 7.5, 4GB VRAM)",
+      "download_status": "downloaded",
+      "probe_status": "passed_real_inference",
+      "license_source": "Apache-2.0 (Qwen Community License / Apache 2.0 per model card)"
+    },
+    "detection": {
+      "component": "Real-time Object Detector",
+      "package": "ultralytics",
+      "package_version": "pending",
+      "model_id": "yolo11n.pt",
+      "source_url": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt",
+      "reference_url": "https://docs.ultralytics.com/models/yolo11/",
+      "revision_or_digest": "v8.3.0",
+      "storage_path": "models\\yolo11n.pt",
+      "size_bytes_if_known": 5613764,
+      "checksum_if_available": "sha256:0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+      "languages": [
+        "coco80_classes_mapped_to_arabic"
+      ],
+      "device": "cpu",
+      "download_status": "downloaded",
+      "probe_status": "passed_real_inference",
+      "license_source": "AGPL-3.0 (Ultralytics Open Source License)"
+    },
+    "ocr": {
+      "component": "Arabic and English Optical Character Recognition",
+      "package": "easyocr",
+      "package_version": "pending",
+      "model_id": "craft_and_arabic_latin_recognizers",
+      "source_url": "https://github.com/JaidedAI/EasyOCR",
+      "reference_url": "https://www.jaided.ai/easyocr/documentation/",
+      "revision_or_digest": "official_jaidedai_weights",
+      "storage_path": "models\\easyocr",
+      "size_bytes_if_known": 120000000,
+      "checksum_if_available": null,
+      "languages": [
+        "ar",
+        "en"
+      ],
+      "device": "cpu",
+      "download_status": "downloaded",
+      "probe_status": "passed_real_inference",
+      "license_source": "Apache-2.0 (JaidedAI EasyOCR)"
+    },
+    "asr": {
+      "component": "Automatic Speech Recognition",
+      "package": "faster-whisper",
+      "package_version": "pending",
+      "model_id": "Systran/faster-whisper-base",
+      "source_url": "https://huggingface.co/Systran/faster-whisper-base",
+      "reference_url": "https://github.com/SYSTRAN/faster-whisper",
+      "revision_or_digest": "main",
+      "storage_path": "models\\whisper",
+      "size_bytes_if_known": 145000000,
+      "checksum_if_available": null,
+      "languages": [
+        "ar",
+        "en",
+        "multilingual"
+      ],
+      "device": "cpu (int8)",
+      "download_status": "downloaded",
+      "probe_status": "passed_real_inference",
+      "license_source": "MIT (Systran Faster-Whisper / OpenAI Whisper weights)"
+    },
+    "tts": {
+      "component": "Arabic Text-to-Speech",
+      "package": "piper-tts",
+      "package_version": "pending",
+      "model_id": "ar_JO-kareem-medium",
+      "source_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ar/ar_JO/kareem/medium/ar_JO-kareem-medium.onnx",
+      "json_source_url": "https://huggingface.co/rhasspy/piper-voices/resolve/main/ar/ar_JO/kareem/medium/ar_JO-kareem-medium.onnx.json",
+      "reference_url": "https://huggingface.co/rhasspy/piper-voices/blob/main/ar/ar_JO/kareem/medium/MODEL_CARD",
+      "revision_or_digest": "main",
+      "storage_path": "models\\piper\\ar_JO-kareem-medium.onnx",
+      "size_bytes_if_known": 63201294,
+      "checksum_if_available": "sha256:9e95cab07b679da603bba17c4dec7ab3111320571964ee95c0379603c086491e",
+      "languages": [
+        "ar_JO"
+      ],
+      "device": "cpu",
+      "download_status": "downloaded",
+      "probe_status": "passed_real_inference",
+      "license_source": "GPL-3.0 (Piper engine) / Voice Dataset License per Kareem Model Card"
+    }
+  }
+}
