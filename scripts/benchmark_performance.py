@@ -183,8 +183,10 @@ def get_system_environment() -> Dict[str, Any]:
 
     # Ollama status
     ollama_stat = {}
+    local_ollama = PROJECT_ROOT / "tools" / "Ollama" / "ollama.exe"
+    ollama_bin = str(local_ollama) if local_ollama.exists() else "ollama"
     try:
-        res = subprocess.run(["X:\\asraa project\\tools\\Ollama\\ollama.exe", "--version"], capture_output=True, text=True, timeout=5)
+        res = subprocess.run([ollama_bin, "--version"], capture_output=True, text=True, timeout=5)
         ollama_stat["version"] = res.stdout.strip() or res.stderr.strip()
     except Exception as e:
         ollama_stat["error"] = str(e)

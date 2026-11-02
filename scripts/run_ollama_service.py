@@ -3,10 +3,13 @@ import os
 import sys
 import subprocess
 import time
+from pathlib import Path
 import httpx
 
-MODELS_DIR = r"X:\asraa project\models\ollama"
-OLLAMA_EXE = r"X:\asraa project\tools\Ollama\ollama.exe"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+MODELS_DIR = str(PROJECT_ROOT / "models" / "ollama")
+LOCAL_OLLAMA = PROJECT_ROOT / "tools" / "Ollama" / "ollama.exe"
+OLLAMA_EXE = str(LOCAL_OLLAMA) if LOCAL_OLLAMA.exists() else "ollama"
 HOST = "127.0.0.1:11434"
 
 def is_running() -> bool:

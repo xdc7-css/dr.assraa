@@ -138,7 +138,7 @@ def main():
         if check_ollama_model("qwen3-vl:2b-instruct-q4_K_M"):
             print("[OK] Required model verified: qwen3-vl:2b-instruct-q4_K_M")
         else:
-            print("[INFO] Model will load from Drive X: storage on first use.")
+            print("[INFO] Model will load from local storage on first use.")
     else:
         print("[WARN] Ollama service not reachable on port 11434.")
 

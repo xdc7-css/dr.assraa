@@ -1,6 +1,6 @@
 {
   "manifest_version": "1.0",
-  "last_updated": "2026-10-25T11:22:37+03:00",
+  "last_updated": "2026-11-02T21:48:36+03:00",
   "project_title": "Design and Development of an AI-Based Multimodal Intelligent Assistant for Assisting Blind and Visually Impaired Individuals in Real-Time Environment Recognition and Voice Interaction",
   "models": {
     "vlm": {

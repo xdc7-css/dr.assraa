@@ -1,8 +1,9 @@
 $ErrorActionPreference = "Stop"
 
-$installer = "X:\asraa project\models\OllamaSetup.exe"
-$logFile = "X:\asraa project\install_ollama.log"
-$installDir = "X:\asraa project\tools\Ollama"
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
+$installer = Join-Path $ProjectRoot "models\OllamaSetup.exe"
+$logFile = Join-Path $ProjectRoot "install_ollama.log"
+$installDir = Join-Path $ProjectRoot "tools\Ollama"
 
 if (-not (Test-Path $installDir)) {
     New-Item -ItemType Directory -Path $installDir -Force | Out-Null

@@ -212,8 +212,8 @@ def acquire_easyocr():
 def acquire_ollama_vlm():
     model_tag = "qwen3-vl:2b-instruct-q4_K_M"
     print(f"\n--- 5. Acquiring Ollama VLM ({model_tag}) ---")
-    x_ollama = Path("X:/asraa project/tools/Ollama/ollama.exe")
-    ollama_bin = str(x_ollama) if x_ollama.exists() else shutil.which("ollama")
+    local_ollama = PROJECT_ROOT / "tools" / "Ollama" / "ollama.exe"
+    ollama_bin = str(local_ollama) if local_ollama.exists() else shutil.which("ollama")
     if not ollama_bin:
         user_local = Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "Ollama" / "ollama.exe"
         if user_local.exists():
@@ -229,7 +229,7 @@ def acquire_ollama_vlm():
     print(f"  Running 'ollama pull {model_tag}' via {ollama_bin}...")
     try:
         env = os.environ.copy()
-        env["OLLAMA_MODELS"] = r"X:\asraa project\models\ollama"
+        env["OLLAMA_MODELS"] = str(PROJECT_ROOT / "models" / "ollama")
         proc = subprocess.run([ollama_bin, "pull", model_tag], env=env, check=True)
         if proc.returncode == 0:
             print(f"  [OK] {model_tag} successfully pulled into Ollama.")

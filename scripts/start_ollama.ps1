@@ -1,5 +1,7 @@
-$ollamaExe = "X:\asraa project\tools\Ollama\ollama.exe"
-$modelsDir = "X:\asraa project\models\ollama"
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
+$localOllama = Join-Path $ProjectRoot "tools\Ollama\ollama.exe"
+$ollamaExe = if (Test-Path $localOllama) { $localOllama } else { "ollama" }
+$modelsDir = Join-Path $ProjectRoot "models\ollama"
 
 if (-not (Test-Path $modelsDir)) {
     New-Item -ItemType Directory -Path $modelsDir -Force | Out-Null

@@ -3,7 +3,7 @@
 
 > **مشروع تخرج لنيل درجة البكالوريوس في هندسة الحاسوب**  
 > **جامعة البصرة — كلية الهندسة — قسم هندسة الحاسوب**  
-> **العام الدراسي:** 2025 - 2026 / 2026 - 2027
+> **العام الدراسي:** 2026 - 2027
 
 ---
 
@@ -57,7 +57,316 @@
 
 ---
 
-## 🚀 التشغيل السريع (Quick Start)
+## 🚀 تثبيت مشروع AMAV من الصفر — للمبتدئين (One-Paste Windows Installation)
+
+إذا كنت طالباً أو باحثاً أو مقيّماً، وليس لديك أي خبرة برمجية سابقة أو حساب على GitHub، يمكنك تثبيت وتشغيل نظام **AMAV** بالكامل على حاسوبك بنقرة واحدة وبأمر واحد فقط.
+
+كل ما تحتاجه هو حاسوب يعمل بنظام **Windows 10** أو **Windows 11** ومثبت عليه برنامج **VS Code**.
+
+---
+
+### 📝 خطوات التثبيت البسيطة للمبتدئين:
+
+1. **افتح برنامج VS Code.**
+2. **من القائمة الفوگ (شريط القوائم العلوي)، اختار `Terminal` وبعدين اختار `New Terminal`.**
+3. **انسخ كود التثبيت الموضح في الصندوق أدناه بالكامل (اضغط على زر النسخ في الزاوية)، والصقه في شاشة التيرمنال، ثم اضغط `Enter`.**
+4. **ماذا سيحدث بعد الضغط على Enter؟**
+   - سيقوم الكود بفحص جهازك بدقة؛ وإذا لاحظ أن برنامجاً أساسياً مثل **Git** أو **Python 3.12** أو **Ollama** غير متوفر، سيسألك بأدب ويطلب موافقتك:
+     `"برنامج Git مو موجود بجهازك، وهو ضروري لسحب ملفات المشروع من GitHub. تريد نثبّته هسه تلقائياً؟ (Y/N)"`
+   - اكتب حرف `Y` واضغط `Enter` للموافقة، وسيقوم بتثبيت البرنامج تلقائياً وبأمان عبر مدير حزم ويندوز الرسمي (`winget`).
+   - سيتم استنساخ ملفات المشروع تلقائياً وتثبيتها في المجلد: **`C:\AMAV`**
+   - سيقوم بإنشاء بيئة بايثون المعزولة وتنزيل نماذج الذكاء الاصطناعي الأوفلاين (Piper TTS، YOLO11n، Whisper، EasyOCR، Qwen3-VL 2B).
+   - **ملاحظة حول الإنترنت:** التثبيت لأول مرة فقط يحتاج اتصالاً بالإنترنت لتنزيل النماذج والمكتبات (~2 إلى 3 GB). وبمجرد اكتمال التثبيت، سيعمل النظام محلياً 100% أوفلاين دون الحاجة للإنترنت نهائياً.
+
+---
+
+### ⚡ كود التثبيت الشامل المباشر (انسخ هذا الكود بالكامل):
+
+```powershell
+# ==============================================================================
+# تثبيت مشروع AMAV بالكامل بنقرة واحدة (للمبتدئين) — نظام ويندوز
+# University of Basrah — Computer Engineering (2026 - 2027)
+# ==============================================================================
+$ErrorActionPreference = "Stop"
+
+try {
+    $OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+} catch {}
+
+function Refresh-ProcessEnv {
+    $machinePath = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+    $userPath = [System.Environment]::GetEnvironmentVariable("Path", "User")
+    $combined = "$machinePath;$userPath"
+    $extraPaths = @(
+        "C:\Program Files\Git\cmd",
+        "C:\Program Files\Git\bin",
+        "$env:LOCALAPPDATA\Programs\Git\cmd",
+        "$env:LOCALAPPDATA\Programs\Python\Python312",
+        "$env:LOCALAPPDATA\Programs\Python\Python312\Scripts",
+        "C:\Program Files\Python312",
+        "C:\Program Files\Python312\Scripts",
+        "$env:LOCALAPPDATA\Programs\Ollama",
+        "C:\Program Files\Ollama"
+    )
+    foreach ($p in $extraPaths) {
+        if ((Test-Path $p) -and ($combined -notlike "*$p*")) {
+            $combined = "$p;$combined"
+        }
+    }
+    $env:PATH = $combined
+}
+
+function Prompt-User {
+    param([string]$Message)
+    Write-Host ""
+    Write-Host "[?] $Message" -ForegroundColor Yellow
+    $ans = Read-Host "     اكتب Y للموافقة، أو N للإلغاء [Y/N]"
+    if ($ans -and ($ans.Trim().ToUpper() -eq "Y" -or $ans.Trim().ToUpper() -eq "YES" -or $ans.Trim() -eq "نعم" -or $ans.Trim() -eq "ي")) {
+        return $true
+    }
+    return $false
+}
+
+Write-Host ""
+Write-Host "========================================================================" -ForegroundColor Cyan
+Write-Host "  AMAV — تثبيت المساعد البصري الذكي على ويندوز (C:\AMAV)                " -ForegroundColor White
+Write-Host "  جامعة البصرة — كلية الهندسة — قسم هندسة الحاسوب (2026 - 2027)         " -ForegroundColor DarkGray
+Write-Host "========================================================================" -ForegroundColor Cyan
+Write-Host ""
+
+# [1/8] فحص توافق النظام ومدير الحزم WinGet
+Write-Host "[1/8] فحص متطلبات النظام ومدير الحزم WinGet..." -ForegroundColor Cyan
+$wingetCmd = Get-Command "winget" -ErrorAction SilentlyContinue
+if (-not $wingetCmd) {
+    Write-Host "[تنبيه] مدير الحزم winget مو متوفر بحاسوبك." -ForegroundColor Yellow
+    Write-Host "لتثبيته بسهولة: افتح متجر مايكروسوفت (Microsoft Store) وثبّت تطبيق 'App Installer'." -ForegroundColor White
+    Write-Host "أو نزله مباشرة من: https://aka.ms/getwinget" -ForegroundColor DarkGray
+    throw "يرجى تثبيت App Installer أولاً ثم إعادة تشغيل هذا الأمر."
+}
+Write-Host "  [تم / OK] مدير الحزم WinGet متوفر وجاهز." -ForegroundColor Green
+
+# [2/8] فحص وتجهيز Git و Python 3.12 و Ollama بموافقة المستخدم
+Write-Host ""
+Write-Host "[2/8] فحص وتجهيز البرامج الأساسية (Git, Python 3.12, Ollama)..." -ForegroundColor Cyan
+Refresh-ProcessEnv
+
+# فحص Git
+$gitCmd = Get-Command "git" -ErrorAction SilentlyContinue
+if (-not $gitCmd) {
+    if (Prompt-User "برنامج Git مو موجود بجهازك، وهو ضروري لسحب وتحديث ملفات المشروع من GitHub. تريد نثبّته هسه تلقائياً؟") {
+        Write-Host "  [*] جاري تثبيت Git عبر WinGet..." -ForegroundColor Cyan
+        & winget install --id Git.Git -e --source winget --accept-source-agreements --accept-package-agreements
+        Refresh-ProcessEnv
+        $gitCmd = Get-Command "git" -ErrorAction SilentlyContinue
+        if (-not $gitCmd) {
+            throw "تم تثبيت Git ولكن يتطلب إعادة فتح نافذة التيرمنال للتعرف عليه."
+        }
+        Write-Host "  [تم / OK] تم تثبيت Git بنجاح!" -ForegroundColor Green
+    } else {
+        throw "تم إيقاف التثبيت: برنامج Git إلزامي لمتابعة سحب المشروع."
+    }
+} else {
+    Write-Host "  [تم / OK] برنامج Git متوفر مسبقاً: $((& git --version))" -ForegroundColor Green
+}
+
+# فحص Python 3.12
+$pyFound = $false
+$pyCheck = Get-Command "py" -ErrorAction SilentlyContinue
+if ($pyCheck) {
+    $v = & py -3.12 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')" 2>$null
+    if ($v -and $v.Trim() -eq "3.12") { $pyFound = $true }
+}
+if (-not $pyFound) {
+    $sysPy = Get-Command "python" -ErrorAction SilentlyContinue
+    if ($sysPy) {
+        $v = & python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')" 2>$null
+        if ($v -and $v.Trim() -eq "3.12") { $pyFound = $true }
+    }
+}
+if (-not $pyFound) {
+    $stdPaths = @("$env:LOCALAPPDATA\Programs\Python\Python312\python.exe", "C:\Program Files\Python312\python.exe")
+    foreach ($p in $stdPaths) {
+        if (Test-Path $p) { $pyFound = $true; break }
+    }
+}
+
+if (-not $pyFound) {
+    if (Prompt-User "بايثون الإصدار 3.12 (Python 3.12) مو موجود بجهازك، والمشروع يحتاجه حصراً لتشغيل نماذج الذكاء الاصطناعي. تريد نثبّته هسه تلقائياً؟") {
+        Write-Host "  [*] جاري تثبيت Python 3.12 عبر WinGet..." -ForegroundColor Cyan
+        & winget install --id Python.Python.3.12 -e --source winget --accept-source-agreements --accept-package-agreements
+        Refresh-ProcessEnv
+        Write-Host "  [تم / OK] تم تثبيت Python 3.12 بنجاح!" -ForegroundColor Green
+    } else {
+        throw "تم إيقاف التثبيت: Python 3.12 إلزامي لتشغيل AMAV."
+    }
+} else {
+    Write-Host "  [تم / OK] مفسر Python 3.12 متوفر وجاهز." -ForegroundColor Green
+}
+
+# فحص Ollama
+$ollamaCmd = Get-Command "ollama" -ErrorAction SilentlyContinue
+$ollamaPaths = @(
+    "$env:LOCALAPPDATA\Programs\Ollama\ollama.exe",
+    "C:\Program Files\Ollama\ollama.exe"
+)
+$hasOllama = ($null -ne $ollamaCmd)
+if (-not $hasOllama) {
+    foreach ($op in $ollamaPaths) {
+        if (Test-Path $op) { $hasOllama = $true; break }
+    }
+}
+if (-not $hasOllama) {
+    if (Prompt-User "محرك Ollama مو موجود بجهازك، وهو المحرك اللي يشغل نموذج الرؤية Qwen3-VL محلياً بدون إنترنت. تريد نثبّته هسه؟") {
+        Write-Host "  [*] جاري تثبيت Ollama عبر WinGet..." -ForegroundColor Cyan
+        & winget install --id Ollama.Ollama -e --source winget --accept-source-agreements --accept-package-agreements
+        Refresh-ProcessEnv
+        Write-Host "  [تم / OK] تم تثبيت Ollama بنجاح!" -ForegroundColor Green
+    } else {
+        Write-Host "  [تنبيه] تم تخطي تثبيت Ollama. يمكنك تثبيته لاحقاً من https://ollama.com" -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "  [تم / OK] محرك Ollama متوفر مسبقاً." -ForegroundColor Green
+}
+
+# [3/8] تنزيل واستنساخ المشروع في C:\AMAV
+Write-Host ""
+Write-Host "[3/8] تنزيل ملفات مشروع AMAV من GitHub في C:\AMAV..." -ForegroundColor Cyan
+$installDir = "C:\AMAV"
+if (Test-Path $installDir) {
+    if (Test-Path (Join-Path $installDir ".git")) {
+        Write-Host "  [تم / OK] مجلد AMAV موجود مسبقاً في C:\AMAV." -ForegroundColor Green
+        Set-Location $installDir
+        $localChanges = (& git status --porcelain 2>$null)
+        if ($localChanges) {
+            Write-Host "  [تنبيه] توجد تعديلات محلية في المجلد C:\AMAV. لن يتم التحديث التلقائي حفاظاً على عملك." -ForegroundColor Yellow
+        } else {
+            if (Prompt-User "المجلد C:\AMAV موجود مسبقاً ومطابق للمستودع. هل تريد تحديثه عبر git pull لآخر إصدار؟") {
+                Write-Host "  [*] جاري تحديث الملفات عبر git pull..." -ForegroundColor Cyan
+                try { & git pull } catch { Write-Host "  [تنبيه] تعذر التحديث عبر git pull، سيتم الاستمرار بالملفات الموجودة." -ForegroundColor Yellow }
+            } else {
+                Write-Host "  [ملاحظة] تم تخطي التحديث والاستمرار بالملفات الحالية." -ForegroundColor DarkGray
+            }
+        }
+    } else {
+        throw "المجلد C:\AMAV موجود مسبقاً ولكن لا يحتوي على مستودع AMAV! لحماية ملفاتك، تم إيقاف العملية. يرجى إفراغ المجلد أو اختيار مسار آخر."
+    }
+} else {
+    Write-Host "  [*] استنساخ المستودع من GitHub إلى C:\AMAV..." -ForegroundColor Cyan
+    & git clone https://github.com/xdc7-css/dr.assraa.git $installDir
+    Set-Location $installDir
+    Write-Host "  [تم / OK] تم تنزيل مشروع AMAV بنجاح في C:\AMAV." -ForegroundColor Green
+}
+
+# [4/8 إلى 8/8] تشغيل سكربت الإعداد الشامل
+Write-Host ""
+Write-Host "الانتقال إلى مراحل الإعداد الداخلي والنماذج..." -ForegroundColor Cyan
+$setupScript = Join-Path $installDir "scripts\setup_windows.ps1"
+if (-not (Test-Path $setupScript)) {
+    throw "لم يتم العثور على سكربت الإعداد: $setupScript"
+}
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $setupScript
+```
+
+---
+
+### 📋 متطلبات النظام والعتاد (System Requirements)
+
+| المكوّن | الحد الأدنى | المواصفات المستحسنة | ملاحظات فنية |
+| :--- | :--- | :--- | :--- |
+| **نظام التشغيل** | Windows 10 (64-bit) | Windows 11 (64-bit) | مدعوم بنظام ملفات NTFS |
+| **المعالج (CPU)** | Intel Core i5 / AMD Ryzen 5 | Intel Core i7-10750H أو أحدث | للاستدلال السريع لنماذج الصوت والنصوص |
+| **الذاكرة (RAM)** | 8 GB | 16 GB DDR4/DDR5 | لتشغيل البيئة الافتراضية والذاكرة المؤقتة |
+| **كرت الشاشة (GPU)** | كرت مدمج أو منفصل | NVIDIA GTX 1650 Ti (4GB VRAM) فما فوق | يدعم تسريع CUDA مع استهلاك ~1.9 GB VRAM فقط |
+| **مساحة التخزين** | 8 GB فارغة (حد أدنى) | 12 إلى 15 GB فارغة | للبيئة الافتراضية (~1.5GB)، والنماذج الأوفلاين (~2.7GB)، وكاش التنزيل (~3.5GB) |
+| **مفسر بايثون** | **Python 3.12** حصراً | **Python 3.12.x** (64-bit) | *إلزامي:* لضمان توافق مكتبات PyTorch و CTranslate2 و OnnxRuntime |
+| **أداة Git** | Git for Windows | أحدث إصدار من Git | ضروري لعملية الاستنساخ والتحديث |
+| **محرك Ollama** | Ollama for Windows | أحدث إصدار محلي | يقوم سكربت التثبيت بفحصه وتثبيته تلقائياً |
+| **Node.js / NPM** | *غير مطلوب* | Node.js 18+ (اختياري) | حزم الواجهة الأمامية React مبنية مسبقاً في `app/static/assets` |
+
+---
+
+### 🎛️ الخيارات التشغيلية للذكاء الاصطناعي (Operating AI Modes)
+
+يوفر المشروع خيارين للتشغيل، الخيار الأول هو النواة الأساسية والافتراضية للمشروع:
+
+#### 1. النمط الأساسي والافتراضي: نظام محلي بالكامل 100% أوفلاين (Local Full Offline AI)
+- **لا يتطلب إنترنت أو اشتراكات:** كافة نماذج الذكاء الاصطناعي تعمل محلياً داخل الحاسوب.
+- **نموذج الرؤية واللغة (VLM):** `Qwen3-VL-2B-Instruct` عبر محرك Ollama (`qwen3-vl:2b-instruct-q4_K_M`) مستهلكاً ~1.9 GB VRAM.
+- **التعرف الآلي على الكلام (ASR):** `Faster-Whisper Base` محلياً لتفريغ أوامر المستخدم الصوتية.
+- **كشف الكائنات والمواقع (Detection):** `YOLO11n` محلياً مع تصنيف الاتجاهات (يمين/وسط/يسار).
+- **التعرف الضوئي على النصوص (OCR):** `EasyOCR` محلياً للغتين العربية والإنجليزية.
+- **توليد النطق الصوتي (TTS):** `Piper TTS` محلياً بصوت كريم العربي الطبيعي (`ar_JO-kareem-medium`).
+- **أعلى درجات الخصوصية:** لا تُرفع أي صورة أو تسجيل صوتي خارج الجهاز نهائياً.
+
+#### 2. النمط الاختياري الإضافي: النطق الصوتي باللهجة العراقية عبر السحابة (Optional Cloud Azure Speech)
+- ميزة إضافية مخصصة **للصوت فقط** لمن يمتلك مفتاح Azure Speech ويرغب بتفعيل صوت طبيعي فائق الجودة باللهجة العراقية (`ar-IQ-BasselNeural`).
+- يتم تفعيله ببساطة عبر إنشاء ملف `.env` ووضع المفتاح:
+  ```env
+  AZURE_SPEECH_KEY="your_azure_speech_key_here"
+  AZURE_SPEECH_REGION="eastus"
+  ```
+- **تنبيه أكاديمي صريح ومهم:** لا يوجد نموذج VLM سحابي متاح أو مدعوم حالياً في المشروع؛ نموذج الرؤية والاستدلال البصري يعمل دائماً ومحصوراً محلياً عبر `Qwen3-VL 2B` على جهاز المستخدم لضمان سرعة الاستجابة والخصوصية.
+
+---
+
+### 🚀 كيفية تشغيل النظام وإيقافه (Daily Usage)
+
+بعد انتهاء سكربت التثبيت بنجاح:
+
+1. **تشغيل النظام بأمر واحد:**
+   ```powershell
+   cd C:\AMAV
+   python run
+   ```
+   *(أو عبر المسار المباشر للبيئة: `.\.venv\Scripts\python.exe run`)*
+
+2. **الواجهة التفاعلية للمستخدم:**
+   يقوم المشغل الذكي بفحص توفر المنفذ وخدمة Ollama، ثم يفتح المتصفح الافتراضي تلقائياً على الرابط:  
+   👉 **`http://127.0.0.1:8000`**
+
+3. **إيقاف النظام بأمان:**
+   لإيقاف الخادم وكافة العمليات التابعة، اضغط اختصار **`Ctrl + C`** داخل نافذة الطرفية، ليقوم النظام بإيقاف العمليات وتحرير الموارد والذاكرة بأمان تام.
+
+---
+
+### 🔧 دليل حل المشكلات الشائعة (Troubleshooting & FAQs)
+
+* **مشكلة تصاريح تشغيل السكربتات (Execution Policy Error):**  
+  إذا ظهرت رسالة خطأ تمنع تشغيل ملفات `.ps1` في PowerShell، قم بتمكين تشغيل السكربتات للمستخدم الحالي بالأمر:
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
+  ```
+  أو شغل السكربت متجاوزاً السياسة:
+  ```powershell
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File ".\scripts\setup_windows.ps1"
+  ```
+
+* **مشكلة خدمة Ollama أو المنفذ 11434:**  
+  إذا لم يستجب محرك Ollama، تأكد من تشغيل تطبيق Ollama أو تشغيل الأمر `ollama serve` في نافذة مستقلة، وتحقق من عدم حجب المنفذ `11434` بواسطة برامج الحماية.
+
+* **مشكلة تعارض منفذ الواجهة 8000:**  
+  إذا كان المنفذ `8000` مشغولاً بتطبيق آخر، سيقوم مشغل `python run` بإعلامك فوراً. إذا كان الخادم الحالي هو خادم AMAV نفسه، سيقوم المشغل بفتح المتصفح مباشرة دون تكرار تشغيل الخادم.
+
+* **إدارة ذاكرة كرت الشاشة (CUDA Out of Memory):**  
+  تم ضبط المشروع افتراضياً على البروفايل الخفيف (`low_memory`) للعمل باستقرار على كروت الشاشة بذاكرة 4GB VRAM (مثل GTX 1650 Ti). إذا واجهت بطئاً أو كنت تستخدم جهازاً بدون كرت NVIDIA منفصل، سيعمل النظام تلقائياً عبر المعالج المركزي (CPU).
+
+---
+
+### 🔄 تحديث المشروع لاحقاً (Updating an Existing Installation)
+
+لتحديث الكود المصدري لآخر إصدار من المستودع مستقبلاً:
+```powershell
+cd C:\AMAV
+git pull
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+python run
+```
+
+---
+
+## 🚀 التشغيل السريع اليدوي (Manual Quick Start)
 
 ### 1. المتطلبات الأساسية:
 - نظام تشغيل: **Windows 10 / 11** (أو Linux).
@@ -66,27 +375,29 @@
 - **Node.js** (v18+) لبناء واجهة React عند الحاجة.
 - **Ollama** مثبت محلياً مع نموذج `qwen3-vl:2b-instruct-q4_K_M`.
 
-### 2. التثبيت لأول مرة:
+### 2. التثبيت اليدوي التقليدي (كخيار بديل):
+إذا واجهتك أي مشكلة في التثبيت التلقائي وأردت تثبيت المشروع خطوة بخطوة يدوياً:
 ```powershell
-# استنساخ المستودع والدخول للمجلد
-cd "X:\asraa project"
+# 1. استنساخ المستودع والدخول للمجلد
+git clone https://github.com/xdc7-css/dr.assraa.git C:\AMAV
+cd C:\AMAV
 
-# إنشاء البيئة الافتراضية وتثبيت المكتبات
-python -m venv .venv
+# 2. إنشاء البيئة الافتراضية المستقلة وتثبيت المكتبات
+py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
 
-# بناء الواجهة الأمامية React (الإنتاج مبني مسبقاً في app/static)
-cd frontend
-npm install
-npm run build
-cd ..
+# 3. تنزيل نماذج الذكاء الاصطناعي الأوفلاين
+python -m scripts.download_models --profile low_memory
+
+# 4. تشغيل النظام
+python run
 ```
 
 ### 3. إطلاق التطبيق بأمر واحد (Standard Launch):
 يمكن إطلاق التطبيق وسيرفر النماذج بالكامل بأمر واحد فقط:
 ```powershell
-cd "X:\asraa project"
+cd C:\AMAV   # (أو مجلد المشروع)
 python run
 ```
 أو:
@@ -234,6 +545,7 @@ asraa-project/
 │   ├── iraqi_arabic_protocol.md                # بروتوكول جمع بيانات الكلام العراقي والموافقة
 │   └── THIRD_PARTY_NOTICES.md                  # إشعارات وتراخيص البرمجيات والمكتبات المستخدمة
 ├── scripts/                                    # سكربتات التشغيل والتقييم والاختبارات المساعدة
+│   ├── setup_windows.ps1                       # سكربت الإعداد والتثبيت الآلي الشامل لأجهزة ويندوز الجديدة (أمر واحد)
 │   ├── check_system.py                         # فحص مواصفات الجهاز والعتاد وتوفر CUDA
 │   ├── evaluate.py                             # سكربت التقييم والقياس المعياري الشامل للمشروع
 │   ├── generate_fixtures.py                    # توليد وتجهيز عينات الاختبار الموزونة
@@ -271,7 +583,7 @@ asraa-project/
 النظام مصمم خصيصاً لمراعاة أعلى معايير الخصوصية للمكفوفين وضعاف البصر:
 - لا تُحفظ الصور أو التسجيلات الصوتية دون إذن صريح.
 - لا يتم الاتصال بأي خوادم سحابية مدفوعة أو خارجية نهائياً.
-- كافة العمليات تتم محلياً 100% داخل حاسوب المستخدم على مسار `X:\asraa project`.
+- كافة العمليات تتم محلياً 100% داخل حاسوب المستخدم على مسار المشروع المستنسخ (دون أي اعتماد على خوادم خارجية).
 - **تنبيه صريح:** النظام مساعد بصري وإرشادي للتعرف على البيئة وقراءة النصوص، وليس بديلاً عن العصا البيضاء أو كلب التوجيه ولا يُعتمد للملاحة الحركية الحرجة.
 
 ---
@@ -279,4 +591,4 @@ asraa-project/
 **إعداد الطالبات:**  
 1. **نور عباس عبد الحسين** — 2. **نور رمزي صبيح قاسم** — 3. **غدير علاء كامل حسين**  
 **بإشراف:** **م.د. اسراء حبيب**  
-**جامعة البصرة — كلية الهندسة — قسم هندسة الحاسوب (2025 - 2026 / 2026 - 2027)**
+**جامعة البصرة — كلية الهندسة — قسم هندسة الحاسوب (2026 - 2027)**
