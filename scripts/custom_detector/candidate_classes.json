@@ -1,0 +1,34 @@
+{
+  "project": "AMAV Custom Object Detection for Assistive Mobility",
+  "base_model": "yolo11n.pt",
+  "candidate_classes": [
+    {
+      "class_id": 0,
+      "class_name_en": "door",
+      "class_name_ar": "باب",
+      "description": "الأبواب الداخلية والخارجية لتسهيل الملاحة بين الغرف والمباني",
+      "safety_criticality": "high"
+    },
+    {
+      "class_id": 1,
+      "class_name_en": "stairs",
+      "class_name_ar": "درج",
+      "description": "الدرج والسلالم لمنع التعثر والسقوط في البيئات المغلقة والمفتوحة",
+      "safety_criticality": "critical"
+    },
+    {
+      "class_id": 2,
+      "class_name_en": "curb",
+      "class_name_ar": "حافة رصيف",
+      "description": "حواف الأرصفة وانحدارات الشارع لتفادي حوادث السقوط",
+      "safety_criticality": "critical"
+    },
+    {
+      "class_id": 3,
+      "class_name_en": "crosswalk",
+      "class_name_ar": "ممر مشاة",
+      "description": "خطوط عبور المشاة لتأكيد مناطق العبور المخصصة",
+      "safety_criticality": "high"
+    }
+  ]
+}

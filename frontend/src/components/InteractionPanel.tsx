@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
-import type { AppLifecycleState } from '../types';
+import type { AppLifecycleState, SearchSessionState, VLMMode } from '../types';
 
 interface InteractionPanelProps {
   lifecycleState: AppLifecycleState;
   isRecording: boolean;
   isPlayingAudio: boolean;
   recognizedQuery: string | null;
+  modelMode: VLMMode;
+  speechSpeed: number;
+  activeSearchSession: SearchSessionState | null;
   onStartVoice: () => void;
   onStopVoice: () => void;
-  onQuickAction: (mode: 'describe' | 'read' | 'find' | 'repeat', param?: string) => void;
+  onQuickAction: (mode: 'describe' | 'read' | 'find' | 'repeat' | 'shorten' | 'reset', param?: string) => void;
   onSendTextQuery: (text: string) => void;
+  onStartContinuousSearch: (target: string) => void;
+  onStopContinuousSearch: () => void;
+  onToggleModelMode: (mode: VLMMode) => void;
+  onChangeSpeechSpeed: (speed: number) => void;
   onStopAll: () => void;
   onFileUpload: (file: File) => void;
 }
@@ -19,10 +26,17 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
   isRecording,
   isPlayingAudio,
   recognizedQuery,
+  modelMode,
+  speechSpeed,
+  activeSearchSession,
   onStartVoice,
   onStopVoice,
   onQuickAction,
   onSendTextQuery,
+  onStartContinuousSearch,
+  onStopContinuousSearch,
+  onToggleModelMode,
+  onChangeSpeechSpeed,
   onStopAll,
   onFileUpload,
 }) => {
@@ -38,6 +52,8 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
     isRecording ||
     isPlayingAudio;
 
+  const isSearching = Boolean(activeSearchSession && activeSearchSession.status !== 'stopped' && activeSearchSession.status !== 'timeout');
+
   const handleVoiceToggle = () => {
     if (isRecording) {
       onStopVoice();
@@ -49,7 +65,7 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const term = searchTerm.trim() || 'قنينة';
-    onQuickAction('find', term);
+    onStartContinuousSearch(term);
   };
 
   const handleTextSubmit = (e: React.FormEvent) => {
@@ -65,19 +81,23 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
       return 'أستمع إليك الآن... تحدث بوضوح ثم اضغط للإنهاء';
     }
     if (lifecycleState === 'transcribing') {
-      return 'جاري تحويل الصوت إلى نص...';
+      return 'جاري تحويل الصوت إلى نص محلياً...';
     }
     if (lifecycleState === 'analyzing') {
-      return 'جاري تحليل الصورة والمشهد بالنماذج المحلية...';
+      return 'جاري تحليل المشهد بالنماذج المحلية...';
     }
     if (isPlayingAudio || lifecycleState === 'speaking') {
-      return 'المساعد يتحدث الآن...';
+      return 'المساعد يتحدث الآن... (اضغط Esc للإيقاف)';
     }
-    return 'اضغط للبدء، واضغط ثانية للإنهاء (أو استمر بالضغط على المسافة)';
+    if (isSearching) {
+      return `جلسة بحث مستمرة عن «${activeSearchSession?.target_query_ar}»...`;
+    }
+    return 'اضغط للبدء واضغط ثانية للإنهاء (أو استمر بالضغط على زر المسافة)';
   };
 
   return (
     <section className="interaction-workspace-card" aria-label="منطقة التفاعل الصوتي والأوامر">
+      {/* Top bar with Stop Button & Model Mode Selector */}
       <div className="card-top-bar">
         <div className="card-heading-group">
           <svg className="app-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -89,12 +109,12 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
           <h2 className="card-heading">أوامر المساعد والتفاعل</h2>
         </div>
 
-        {/* Persistent, Single Coherent Stop Action */}
+        {/* Persistent Emergency Stop Action */}
         <button
           type="button"
-          className={`persistent-stop-btn ${isBusy ? 'is-busy-active' : ''}`}
+          className={`persistent-stop-btn ${isBusy || isSearching ? 'is-busy-active' : ''}`}
           onClick={onStopAll}
-          aria-label="إيقاف فوري للصوت والعمليات وإلغاء الطلب (مفتاح الإيقاف Esc)"
+          aria-label="إيقاف فوري للصوت والعمليات وإلغاء الطلب أو البحث (مفتاح Esc)"
         >
           <svg className="app-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <rect x="5" y="5" width="14" height="14" rx="2"></rect>
@@ -103,7 +123,74 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
         </button>
       </div>
 
-      {/* Prominent Scale Microphone Button */}
+      {/* Model Mode Toggle: Fast (2B) vs Detailed (4B) */}
+      <div className="model-mode-selector-bar" role="group" aria-label="وضع نموذج الرؤية واللغة">
+        <span className="mode-selector-label">نموذج الرؤية:</span>
+        <div className="mode-toggle-group">
+          <button
+            type="button"
+            className={`mode-toggle-btn ${modelMode === 'fast' ? 'is-active' : ''}`}
+            onClick={() => onToggleModelMode('fast')}
+            aria-pressed={modelMode === 'fast'}
+            title="النموذج السريع الافتراضي (2B) - منخفض الذاكرة وسريع الاستجابة"
+          >
+            ⚡ سريع (2B)
+          </button>
+          <button
+            type="button"
+            className={`mode-toggle-btn ${modelMode === 'detailed' ? 'is-active' : ''}`}
+            onClick={() => onToggleModelMode('detailed')}
+            aria-pressed={modelMode === 'detailed'}
+            title="النموذج المفصل الاختياري (4B) - وصف أعمق وتفاصيل بصرية أوسع"
+          >
+            🔍 وصف مفصّل (4B)
+          </button>
+        </div>
+
+        {/* Speech Speed Controls */}
+        <div className="speed-selector-group" role="group" aria-label="سرعة النطق الصوتي">
+          <span className="speed-label">السرعة:</span>
+          {[0.75, 1.0, 1.25, 1.5].map((spd) => (
+            <button
+              key={spd}
+              type="button"
+              className={`speed-pill-btn ${speechSpeed === spd ? 'speed-active' : ''}`}
+              onClick={() => onChangeSpeechSpeed(spd)}
+              aria-pressed={speechSpeed === spd}
+              aria-label={`سرعة النطق ${spd} ضعف`}
+            >
+              {spd}x
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Active Continuous Search Session Banner */}
+      {isSearching && activeSearchSession && (
+        <div className="search-session-active-card" role="status" aria-live="polite">
+          <div className="session-card-header">
+            <span className="session-pulse-indicator" aria-hidden="true" />
+            <span className="session-target-title">
+              جلسة بحث مستمرة عن: <strong>{activeSearchSession.target_query_ar}</strong>
+            </span>
+            <span className="session-timer-badge">{Math.round(activeSearchSession.elapsed_seconds)} ثانية</span>
+          </div>
+          <div className="session-direction-box">
+            <span className="direction-icon">🎯</span>
+            <span className="direction-live-text">{activeSearchSession.direction_text_ar || 'جاري البحث في الإطار...'}</span>
+          </div>
+          <button
+            type="button"
+            className="session-stop-btn"
+            onClick={onStopContinuousSearch}
+            aria-label="إيقاف جلسة البحث المستمرة"
+          >
+            إنهاء جلسة البحث
+          </button>
+        </div>
+      )}
+
+      {/* Primary Push-to-Talk Microphone Button */}
       <div className="voice-mic-container">
         <button
           type="button"
@@ -123,7 +210,7 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
 
           <div className="mic-text-content">
             <span className="mic-title">تحدث مع المساعد</span>
-            <span className="mic-example-hint">جرّب: شنو قدامي؟ أو اقرأ المكتوب</span>
+            <span className="mic-example-hint">جرّب: شنو قدامي؟ | وين القنينة؟ | اقرأ المكتوب | كرر | اختصر</span>
             <span className="mic-state-status">{getVoiceHint()}</span>
           </div>
         </button>
@@ -143,7 +230,7 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
           type="button"
           className="action-pill-btn"
           onClick={() => onQuickAction('describe')}
-          aria-label="صف المشهد البصري الحالي"
+          aria-label="صف المشهد البصري الحالي (مفتاح D)"
         >
           <svg className="app-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -159,7 +246,7 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
           type="button"
           className="action-pill-btn"
           onClick={() => onQuickAction('read')}
-          aria-label="اقرأ النصوص والمطبوعات"
+          aria-label="اقرأ النصوص والمطبوعات (مفتاح R)"
         >
           <svg className="app-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
@@ -178,7 +265,7 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
             const input = document.getElementById('search-object-field');
             if (input) input.focus();
           }}
-          aria-label="ابحث عن كائن محدد في المشهد"
+          aria-label="ابحث عن كائن محدد في المشهد (مفتاح F)"
         >
           <svg className="app-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
@@ -189,12 +276,28 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
             <span className="btn-shortcut-hint">(F)</span>
           </div>
         </button>
+
+        <button
+          type="button"
+          className="action-pill-btn"
+          onClick={() => onQuickAction('shorten')}
+          aria-label="اختصر الجواب السابق دون تحليل جديد"
+        >
+          <svg className="app-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="14" y2="12"></line>
+            <line x1="4" y1="18" x2="10" y2="18"></line>
+          </svg>
+          <div className="btn-label-pair">
+            <span className="btn-main-txt">اختصر الجواب</span>
+          </div>
+        </button>
       </div>
 
-      {/* Properly Labelled Object Search Field */}
+      {/* Continuous Object Search Form */}
       <form onSubmit={handleSearchSubmit} className="search-object-container">
         <label htmlFor="search-object-field" className="form-sub-label">
-          البحث عن غرض محدد في المشهد:
+          البحث المستمر عن غرض في المشهد (مع التوجيه اللحظي يمين/وسط/يسار):
         </label>
         <div className="search-field-row">
           <input
@@ -203,16 +306,16 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
             className="clean-text-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="اكتب اسم الغرض (مثال: قنينة، كوب، لابتوب)..."
-            aria-label="اسم الغرض المراد البحث عنه"
+            placeholder="اكتب الغرض (مثال: قنينة، بطل، كوب، لابتوب، جنطة)..."
+            aria-label="اسم الغرض للبحث المستمر"
           />
           <button type="submit" className="search-action-btn">
-            ابحث (F)
+            بدء البحث المستمر 🎯
           </button>
         </div>
       </form>
 
-      {/* Compact Expandable Secondary Input: Text Query & File Upload */}
+      {/* Expandable Alternative Input: Text Query & File Upload */}
       <div className="advanced-input-disclosure">
         <button
           type="button"
@@ -220,11 +323,22 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
           onClick={() => setShowAdvanced(!showAdvanced)}
           aria-expanded={showAdvanced}
         >
-          <span>{showAdvanced ? '− خيارات الإدخال البديلة' : '+ كتابة سؤال بديل أو رفع صورة من ملف'}</span>
+          <span>{showAdvanced ? '− خيارات الإدخال والذاكرة البديلة' : '+ كتابة سؤال بديل، إعادة ضبط الذاكرة، أو رفع صورة'}</span>
         </button>
 
         {showAdvanced && (
           <div className="disclosure-content-box">
+            <div className="memory-reset-row">
+              <button
+                type="button"
+                className="secondary-tool-btn reset-memory-btn"
+                onClick={() => onQuickAction('reset')}
+                aria-label="مسح ذاكرة السياق الصوتي والبدء من جديد"
+              >
+                🔄 إعادة ضبط الذاكرة والسياق
+              </button>
+            </div>
+
             <form onSubmit={handleTextSubmit} className="text-query-form">
               <label htmlFor="manual-query-field" className="form-sub-label">
                 كتابة سؤال يدوي بدلاً من الصوت:
@@ -236,7 +350,7 @@ export const InteractionPanel: React.FC<InteractionPanelProps> = ({
                   className="clean-text-input"
                   value={textQuery}
                   onChange={(e) => setTextQuery(e.target.value)}
-                  placeholder="اكتب سؤالك هنا (مثال: شنو على الميز؟ أو اقرأ هذه الورقة)..."
+                  placeholder="اكتب سؤالك هنا (مثال: شنو على الميز؟ أو وين الكوب؟)..."
                   aria-label="سؤال كتابي للمساعد"
                 />
                 <button type="submit" className="search-action-btn">

@@ -7,7 +7,7 @@
 
 export interface Student {
   name: string;
-  sequence: string;
+  sequence?: string;
 }
 
 export interface AcademicIdentity {
@@ -35,12 +35,12 @@ export const AMAV_IDENTITY: AcademicIdentity = {
   englishTitle:
     "Design and Development of an AI-Based Multimodal Intelligent Assistant for Assisting Blind and Visually Impaired Individuals in Real-Time Environment Recognition and Voice Interaction",
   students: [
-    { name: "بشاير احسان احمد محمد", sequence: "35" },
-    { name: "الاء محمد عبدالواحد مطلب", sequence: "55" },
-    { name: "غدير علاء كامل حسين", sequence: "109" },
+    { name: "نور عباس عبد الحسين" },
+    { name: "نور رمزي صبيح قاسم" },
+    { name: "غدير علاء كامل حسين" },
   ],
   supervisor: "م.د. اسراء حبيب",
-  academicYear: "2025 - 2026",
+  academicYear: "2026 - 2027",
   processingType: "معالجة طرفية محلية كاملة (Edge Offline Architecture)",
   privacyGuarantee:
     "حماية الخصوصية مضمونة 100% — لا يتم إرسال أي إطار من الكاميرا أو تسجيل صوتي إلى أي خادم خارجي أو سحابي.",

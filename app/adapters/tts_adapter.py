@@ -14,6 +14,11 @@ from app.config import TTSConfig
 from app.schemas import SpeakResponse
 from app.adapters.azure_speech_adapter import AzureSpeechAdapter
 
+try:
+    from piper.config import SynthesisConfig
+except ImportError:
+    SynthesisConfig = None
+
 # Curated pronunciation dictionary for recurring interface phrases
 # Prevents mispronunciation of technical abbreviations and interface keywords
 PRONUNCIATION_MAP = {
@@ -130,15 +135,16 @@ class TTSAdapter:
 
         effective_pace = length_scale or self.config.length_scale
 
-        try:
-            from piper.config import SynthesisConfig
-            syn_config = SynthesisConfig(
-                length_scale=effective_pace,
-                volume=1.0,
-                normalize_audio=True,
-            )
-        except Exception:
-            syn_config = None
+        syn_config = None
+        if SynthesisConfig is not None:
+            try:
+                syn_config = SynthesisConfig(
+                    length_scale=effective_pace,
+                    volume=1.0,
+                    normalize_audio=True,
+                )
+            except Exception:
+                syn_config = None
 
         try:
             wav_buffer = io.BytesIO()

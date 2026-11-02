@@ -17,11 +17,11 @@ const AMAV_IDENTITY = {
   projectSubtitleAr: "لمساعدة المكفوفين وضعاف البصر في التعرف على البيئة والتفاعل الصوتي",
   projectTitleEn: "Design and Development of an AI-Based Multimodal Intelligent Assistant for Assisting Blind and Visually Impaired Individuals in Real-Time Environment Recognition and Voice Interaction",
 
-  // بيانات إعداد الطالبات (الأسماء والتسلسلات الرسمية)
+  // بيانات إعداد الطالبات
   students: [
-    { name: "بشاير احسان احمد محمد", sequence: "35" },
-    { name: "الاء محمد عبدالواحد مطلب", sequence: "55" },
-    { name: "غدير علاء كامل حسين", sequence: "109" }
+    { name: "نور عباس عبد الحسين" },
+    { name: "نور رمزي صبيح قاسم" },
+    { name: "غدير علاء كامل حسين" }
   ],
 
   // المشرفة الأكاديمية (بدون تعديل أو إضافة)

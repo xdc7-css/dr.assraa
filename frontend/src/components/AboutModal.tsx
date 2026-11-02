@@ -64,15 +64,16 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           </section>
 
           <section className="modal-info-block">
-            <h3 className="block-title">فريق العمل (إعداد الطالبات والتسلسلات الرسمية)</h3>
-            <ul className="students-roster-list">
-              {AMAV_IDENTITY.students.map((student) => (
-                <li key={student.sequence} className="student-roster-item">
-                  <span className="student-roster-name">{student.name}</span>
-                  <span className="student-roster-seq">التسلسل: {student.sequence}</span>
+            <h3 className="block-title">إعداد الطالبات</h3>
+            <ol className="students-roster-list" aria-label="قائمة الطالبات">
+              {AMAV_IDENTITY.students.map((student, idx) => (
+                <li key={student.name} className="student-roster-item">
+                  <span className="student-roster-name">
+                    <span className="student-num">{idx + 1}.</span> {student.name}
+                  </span>
                 </li>
               ))}
-            </ul>
+            </ol>
           </section>
 
           <section className="modal-info-block">

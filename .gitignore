@@ -29,9 +29,14 @@ tools/
 htmlcov/
 *.log
 install_ollama.log
+scratch/
 scratch_test_ar.jpg
 amav_review_package.zip
 data/audio_samples/*.wav
+data/*benchmark*.json
+data/*verification*.json
+data/baseline_performance.json
+data/optimized_performance.json
 
 # OS generated files
 Thumbs.db

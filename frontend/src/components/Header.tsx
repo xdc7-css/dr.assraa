@@ -3,16 +3,20 @@ import { AMAV_IDENTITY } from '../config/identity';
 
 interface HeaderProps {
   highContrast: boolean;
+  devMode: boolean;
   onToggleTheme: () => void;
   onOpenAbout: () => void;
   onOpenDiagnostics: () => void;
+  onToggleDevMode: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   highContrast,
+  devMode,
   onToggleTheme,
   onOpenAbout,
   onOpenDiagnostics,
+  onToggleDevMode,
 }) => {
   return (
     <header className="academic-header" role="banner">
@@ -86,6 +90,19 @@ export const Header: React.FC<HeaderProps> = ({
               </svg>
               <span>التشخيص</span>
             </button>
+
+            <button
+              type="button"
+              className={`tool-btn dev-mode-toggle-btn ${devMode ? 'is-active' : ''}`}
+              onClick={onToggleDevMode}
+              aria-label={devMode ? "إغلاق مراقب الأداء للمطورين" : "فتح مراقب الأداء اللحظي للمطورين"}
+              title="مراقب الأداء الحي للمطورين (Live E2E Benchmarking)"
+            >
+              <svg className="app-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              <span>{devMode ? "مراقب الأداء ⚡" : "وضع المطور"}</span>
+            </button>
           </div>
         </div>
 
@@ -93,14 +110,14 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="academic-credits-container" aria-label="فريق العمل والإشراف الأكاديمي">
           <div className="credits-students-col">
             <span className="credits-title">إعداد الطالبات:</span>
-            <div className="credits-names-list">
+            <ol className="credits-names-list" aria-label="قائمة أسماء الطالبات">
               {AMAV_IDENTITY.students.map((student, idx) => (
-                <span key={student.sequence} className="student-name-item">
-                  {student.name}
-                  {idx < AMAV_IDENTITY.students.length - 1 && <span className="name-sep" aria-hidden="true">•</span>}
-                </span>
+                <li key={student.name} className="student-name-item">
+                  <span className="student-num">{idx + 1}.</span>
+                  <span>{student.name}</span>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
 
           <div className="credits-supervisor-col">

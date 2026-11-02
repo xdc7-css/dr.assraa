@@ -161,8 +161,18 @@ class OCRAdapter:
 
         target_img = self.preprocess_image(np_img) if apply_preprocessing else np_img
 
+        canvas_size = getattr(self.config, "canvas_size", 1280)
+        mag_ratio = getattr(self.config, "mag_ratio", 1.0)
+        batch_size = getattr(self.config, "batch_size", 4)
+
         try:
-            results = self.reader.readtext(target_img, detail=self.config.detail)
+            results = self.reader.readtext(
+                target_img,
+                detail=self.config.detail,
+                canvas_size=canvas_size,
+                mag_ratio=mag_ratio,
+                batch_size=batch_size,
+            )
         except Exception as e:
             return OCRResponse(
                 frame_id=frame_id,

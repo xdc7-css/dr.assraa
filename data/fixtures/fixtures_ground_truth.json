@@ -1,24 +1,74 @@
 {
   "arabic_printed_notice": {
     "fixture": "data/fixtures/arabic_printed_notice.jpg",
-    "reference_text": "جمهورية العراق - وزارة التعليم العالي\nقسم هندسة الحاسوب والذكاء الاصطناعي\nمختبر الرؤية الحاسوبية - ROOM 204\nيرجى الهدوء - Quiet Please\nتاريخ الإعلان: 2026",
-    "lines": [
-      "جمهورية العراق - وزارة التعليم العالي",
-      "قسم هندسة الحاسوب والذكاء الاصطناعي",
-      "مختبر الرؤية الحاسوبية - ROOM 204",
-      "يرجى الهدوء - Quiet Please",
-      "تاريخ الإعلان: 2026"
-    ]
+    "category": "ocr_printed",
+    "reference_text": "جمهورية العراق - وزارة التعليم العالي\nقسم هندسة الحاسوب والذكاء الاصطناعي\nمختبر الرؤية الحاسوبية - ROOM 204\nيرجى الهدوء - Quiet Please\nتاريخ الإعلان: 2026"
   },
   "arabic_heldout_notice": {
     "fixture": "data/fixtures/arabic_heldout_notice.jpg",
-    "reference_text": "صيدلية بغداد المركزية\nطريقة الاستخدام: قرص واحد بعد الطعام\nسعر الدواء: 5000 دينار عراقي\nرقم الهاتف: 07701234567\nBaghdad Pharmacy - 2026",
-    "lines": [
-      "صيدلية بغداد المركزية",
-      "طريقة الاستخدام: قرص واحد بعد الطعام",
-      "سعر الدواء: 5000 دينار عراقي",
-      "رقم الهاتف: 07701234567",
-      "Baghdad Pharmacy - 2026"
+    "category": "ocr_heldout_numbers",
+    "reference_text": "صيدلية بغداد المركزية\nطريقة الاستخدام: قرص واحد بعد الطعام\nسعر الدواء: 5000 دينار عراقي\nرقم الهاتف: 07701234567\nBaghdad Pharmacy - 2026"
+  },
+  "scene_objects": {
+    "fixture": "data/fixtures/scene_objects.jpg",
+    "category": "detection_desk",
+    "objects": [
+      "bottle",
+      "laptop",
+      "cup",
+      "dining table"
     ]
+  },
+  "dark_unclear": {
+    "fixture": "data/fixtures/dark_unclear.jpg",
+    "category": "quality_underexposed",
+    "expected_issue": "underexposed"
+  },
+  "living_room": {
+    "fixture": "data/fixtures/living_room.jpg",
+    "category": "detection_indoor",
+    "objects": [
+      "couch",
+      "chair",
+      "tv"
+    ]
+  },
+  "kitchen_scene": {
+    "fixture": "data/fixtures/kitchen_scene.jpg",
+    "category": "multi_instance_bottle",
+    "objects": [
+      "bottle",
+      "bowl",
+      "cup",
+      "dining table"
+    ]
+  },
+  "street_crossing": {
+    "fixture": "data/fixtures/street_crossing.jpg",
+    "category": "mobility_outdoor",
+    "objects": [
+      "person",
+      "car",
+      "crosswalk",
+      "curb"
+    ]
+  },
+  "indoor_doorway": {
+    "fixture": "data/fixtures/indoor_doorway.jpg",
+    "category": "candidate_assistive_classes",
+    "objects": [
+      "door",
+      "stairs"
+    ]
+  },
+  "book_reading": {
+    "fixture": "data/fixtures/book_reading.jpg",
+    "category": "ocr_book_paragraphs",
+    "reference_text": "الفصل الأول: مدخل إلى الذكاء الاصطناعي\nتعتبر أنظمة المساعدات البصرية الحديثة خطوة رائدة\nفي تمكين المكفوفين من إدراك بيئتهم المحيطة بدقة.\nتعتمد التقنية على التعرف اللحظي على الكائنات وقراءة النصوص.\nالمعالجة المحلية الكاملة تضمن أعلى درجات الخصوصية.\nالصفحة 42"
+  },
+  "bright_glare": {
+    "fixture": "data/fixtures/bright_glare.jpg",
+    "category": "quality_overexposed",
+    "expected_issue": "overexposed"
   }
 }

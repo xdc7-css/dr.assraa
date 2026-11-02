@@ -18,6 +18,25 @@ class ASRAdapter:
         self.model = None
         self._loaded = False
         self._load_error: Optional[str] = None
+        self.effective_device: str = "cpu"
+        self.effective_compute_type: str = "int8"
+
+    def _setup_cuda_env(self):
+        """Discovers local bundled CUDA 12 runtime DLLs (e.g. from Ollama distribution) if available."""
+        try:
+            from app.config import PROJECT_ROOT
+            cuda_dir = PROJECT_ROOT / "tools" / "Ollama" / "lib" / "ollama" / "cuda_v12"
+            if cuda_dir.exists():
+                cuda_str = str(cuda_dir)
+                if hasattr(os, "add_dll_directory"):
+                    try:
+                        os.add_dll_directory(cuda_str)
+                    except Exception:
+                        pass
+                if cuda_str not in os.environ.get("PATH", ""):
+                    os.environ["PATH"] = f"{cuda_str};" + os.environ.get("PATH", "")
+        except Exception:
+            pass
 
     def load_model(self) -> bool:
         if self._loaded and self.model is not None:
@@ -27,16 +46,49 @@ class ASRAdapter:
             download_root = Path(self.config.download_root)
             download_root.mkdir(parents=True, exist_ok=True)
 
-            self.model = WhisperModel(
-                model_size_or_path=self.config.model_id_or_path,
-                device=self.config.device,
-                compute_type=self.config.compute_type,
-                download_root=str(download_root),
-                cpu_threads=4,
-            )
-            self._loaded = True
-            self._load_error = None
-            return True
+            self._setup_cuda_env()
+
+            # Attempt GPU / CUDA acceleration if requested
+            if self.config.device == "cuda":
+                try:
+                    self.model = WhisperModel(
+                        model_size_or_path=self.config.model_id_or_path,
+                        device="cuda",
+                        compute_type=self.config.compute_type or "float16",
+                        download_root=str(download_root),
+                    )
+                    self._loaded = True
+                    self._load_error = None
+                    self.effective_device = "cuda"
+                    self.effective_compute_type = self.config.compute_type or "float16"
+                    return True
+                except Exception as cuda_err:
+                    # Honest, graceful fallback to CPU
+                    self._load_error = f"CUDA init failed ({cuda_err}), falling back to CPU."
+                    self.model = WhisperModel(
+                        model_size_or_path=self.config.model_id_or_path,
+                        device="cpu",
+                        compute_type="int8",
+                        download_root=str(download_root),
+                        cpu_threads=4,
+                    )
+                    self._loaded = True
+                    self.effective_device = "cpu"
+                    self.effective_compute_type = "int8"
+                    return True
+            else:
+                self.model = WhisperModel(
+                    model_size_or_path=self.config.model_id_or_path,
+                    device="cpu",
+                    compute_type="int8",
+                    download_root=str(download_root),
+                    cpu_threads=4,
+                )
+                self._loaded = True
+                self._load_error = None
+                self.effective_device = "cpu"
+                self.effective_compute_type = "int8"
+                return True
         except Exception as e:
             self._load_error = str(e)
             self._loaded = False
@@ -110,7 +162,7 @@ class ASRAdapter:
                 language=lang_arg,
                 task="transcribe",
                 vad_filter=self.config.vad_filter,
-                beam_size=5,
+                beam_size=1,
             )
 
             # Consume the entire iterator to complete decoding and measure full latency

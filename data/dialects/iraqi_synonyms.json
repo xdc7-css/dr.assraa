@@ -1,0 +1,129 @@
+{
+  "dialect": "Iraqi Arabic (اللهجة العراقية)",
+  "version": "1.0",
+  "project": "AMAV — Arabic Multimodal Assistive Vision",
+  "synonym_mappings": {
+    "bottle": {
+      "standard_ar": "قنينة",
+      "iraqi_terms": ["بطل", "دولكة", "ماي", "مي", "قارورة", "بطل ماي", "بطل ماء"],
+      "intent": "find",
+      "coco_class": "bottle"
+    },
+    "cup": {
+      "standard_ar": "كوب",
+      "iraqi_terms": ["قلاص", "كاسة", "فنجان", "استكان", "قدح", "كوب جاي"],
+      "intent": "find",
+      "coco_class": "cup"
+    },
+    "couch": {
+      "standard_ar": "أريكة",
+      "iraqi_terms": ["قنفة", "تخم", "صوفة", "اريكة"],
+      "intent": "find",
+      "coco_class": "couch"
+    },
+    "dining table": {
+      "standard_ar": "طاولة",
+      "iraqi_terms": ["ميز", "منضدة", "مكتب", "طاولة طعام"],
+      "intent": "find",
+      "coco_class": "dining table"
+    },
+    "bed": {
+      "standard_ar": "سرير",
+      "iraqi_terms": ["جرباية", "منامة", "فراش"],
+      "intent": "find",
+      "coco_class": "bed"
+    },
+    "backpack": {
+      "standard_ar": "حقيبة ظهر",
+      "iraqi_terms": ["جنطة", "شنطة", "جنطة ظهر", "حقيبة"],
+      "intent": "find",
+      "coco_class": "backpack"
+    },
+    "handbag": {
+      "standard_ar": "حقيبة يد",
+      "iraqi_terms": ["جنطة يد", "شنطة يد", "جنطة صغيرة"],
+      "intent": "find",
+      "coco_class": "handbag"
+    },
+    "laptop": {
+      "standard_ar": "حاسوب محمول",
+      "iraqi_terms": ["لابتوب", "حاسبة", "كمبيوتر", "حاسوب"],
+      "intent": "find",
+      "coco_class": "laptop"
+    },
+    "cell phone": {
+      "standard_ar": "هاتف خلوي",
+      "iraqi_terms": ["موبايل", "تلفون", "جوال", "خلوي", "جهاز"],
+      "intent": "find",
+      "coco_class": "cell phone"
+    },
+    "cat": {
+      "standard_ar": "قطة",
+      "iraqi_terms": ["بزونة", "بس", "هر", "قطوة"],
+      "intent": "find",
+      "coco_class": "cat"
+    },
+    "dog": {
+      "standard_ar": "كلب",
+      "iraqi_terms": ["جلب", "كلب"],
+      "intent": "find",
+      "coco_class": "dog"
+    },
+    "person": {
+      "standard_ar": "شخص",
+      "iraqi_terms": ["رجال", "مرة", "ولد", "بنية", "بنت", "طفل", "احد", "انسان"],
+      "intent": "find",
+      "coco_class": "person"
+    }
+  },
+  "intent_phrases": {
+    "describe": [
+      "شنو قدامي؟",
+      "شنو كدامي؟",
+      "شكو كدامي هسة؟",
+      "شكو قدامي؟",
+      "بينلي شنو موجود",
+      "صف المشهد",
+      "ايش كدامي؟",
+      "ماذا أمامي؟"
+    ],
+    "read": [
+      "اقرأ المكتوب",
+      "شنو مكتوب؟",
+      "شكو مكتوب بالورقة؟",
+      "اقرالي هذا النص",
+      "اقرأ النص بالصورة",
+      "ايش مكتوب هنا؟"
+    ],
+    "repeat": [
+      "كرر",
+      "عيد",
+      "اعد",
+      "شنو كلت؟",
+      "شنو قلت؟",
+      "ما سمعتك",
+      "عيد الجواب",
+      "كرر الجواب"
+    ],
+    "shorten": [
+      "اختصر",
+      "باختصار",
+      "اختصر الجواب",
+      "قلل الكلام",
+      "قصر الجواب"
+    ],
+    "stop": [
+      "توقف",
+      "بس",
+      "اسكت",
+      "وقف",
+      "كافي"
+    ],
+    "reset": [
+      "اعادة ضبط",
+      "امسح الذاكرة",
+      "ابدأ من جديد",
+      "ابدا من جديد"
+    ]
+  }
+}

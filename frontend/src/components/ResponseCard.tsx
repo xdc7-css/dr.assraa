@@ -6,8 +6,11 @@ interface ResponseCardProps {
   response: AssistResponse | null;
   hasAudio: boolean;
   isPlayingAudio: boolean;
+  ocrState?: 'none' | 'processing_notice' | 'text_delivered';
   onReplayAudio: () => void;
   onRepeatAnswer: () => void;
+  onShortenAnswer: () => void;
+  onOverrideQuality?: () => void;
 }
 
 export const ResponseCard: React.FC<ResponseCardProps> = ({
@@ -15,8 +18,11 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({
   response,
   hasAudio,
   isPlayingAudio,
+  ocrState = 'none',
   onReplayAudio,
   onRepeatAnswer,
+  onShortenAnswer,
+  onOverrideQuality,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -30,6 +36,8 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({
       console.warn('Clipboard write failed:', err);
     }
   };
+
+  const isQualityIssue = Boolean(response?.frame_quality && !response.frame_quality.is_usable);
 
   const renderContent = () => {
     if (lifecycleState === 'listening') {
@@ -50,15 +58,6 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({
       );
     }
 
-    if (lifecycleState === 'analyzing') {
-      return (
-        <div className="response-state-msg is-processing">
-          <span className="dot-pulse" aria-hidden="true" />
-          <span>جاري تحليل المشهد البصري بواسطة النماذج المحلية...</span>
-        </div>
-      );
-    }
-
     if (lifecycleState === 'cancelled') {
       return (
         <div className="response-state-msg is-cancelled">
@@ -75,10 +74,77 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({
       );
     }
 
+    // Quality guidance warning box
+    if (isQualityIssue && response?.frame_quality) {
+      return (
+        <div className="quality-guidance-card" role="alert" aria-live="assertive">
+          <div className="quality-warning-header">
+            <span className="warning-icon" aria-hidden="true">⚠️</span>
+            <span className="warning-title">إرشاد جودة الصورة واللقطة</span>
+          </div>
+          <p className="quality-advice-text">
+            {response.frame_quality.advice_ar || response.answer_ar}
+          </p>
+          {onOverrideQuality && (
+            <button
+              type="button"
+              className="quality-override-btn"
+              onClick={onOverrideQuality}
+              aria-label="تجاهل تنبيه الجودة وتحليل الصورة الحالية على أي حال"
+            >
+              تجاهل التحذير والمتابعة بالتحليل ⚡
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    // Immediate Streaming Arabic Answer Display
     if (response?.answer_ar) {
       return (
-        <div className="response-answer-text" tabIndex={0} role="region" aria-label="نص إجابة المساعد">
-          {response.answer_ar}
+        <div className="response-content-wrapper">
+          <div className="response-meta-badge-row">
+            {response.model_mode && (
+              <span className={`model-mode-badge mode-${response.model_mode}`}>
+                {response.model_mode === 'detailed' ? '🔍 وصف مفصّل (2B-Detailed)' : '⚡ سريع (2B)'}
+              </span>
+            )}
+            {/* Distinct OCR Milestones Indicator */}
+            {response.mode === 'read' && (
+              ocrState === 'text_delivered' || response.answer_ar.includes('النص المكتوب هو') ? (
+                <span className="ocr-milestone-badge ocr-delivered-badge" title="تم تسليم نصوص المستند الفعلية بنجاح">
+                  📄 تم استخراج النصوص الفعلية
+                </span>
+              ) : (
+                <span className="ocr-milestone-badge ocr-notice-badge" title="إشعار بدء فحص EasyOCR">
+                  ⏳ جاري استخراج النصوص...
+                </span>
+              )
+            )}
+            {lifecycleState === 'analyzing' && (
+              <span className="streaming-live-pill" aria-live="polite">
+                <span className="dot-pulse" aria-hidden="true" />
+                <span>جاري التدفق اللحظي...</span>
+              </span>
+            )}
+            {response.total_latency_ms > 0 && lifecycleState !== 'analyzing' && (
+              <span className="latency-badge">{Math.round(response.total_latency_ms)} ms</span>
+            )}
+          </div>
+
+          <div className="response-answer-text" tabIndex={0} role="region" aria-label="نص إجابة المساعد">
+            {response.answer_ar}
+            {lifecycleState === 'analyzing' && <span className="typing-cursor" aria-hidden="true">▌</span>}
+          </div>
+        </div>
+      );
+    }
+
+    if (lifecycleState === 'analyzing') {
+      return (
+        <div className="response-state-msg is-processing">
+          <span className="dot-pulse" aria-hidden="true" />
+          <span>جاري تحليل المشهد البصري بواسطة النماذج المحلية...</span>
         </div>
       );
     }
@@ -145,6 +211,15 @@ export const ResponseCard: React.FC<ResponseCardProps> = ({
                 <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
               </svg>
               <span>كرر (A)</span>
+            </button>
+
+            <button
+              type="button"
+              className="secondary-tool-btn"
+              onClick={onShortenAnswer}
+              aria-label="اختصر الجواب السابق"
+            >
+              <span>اختصر</span>
             </button>
           </div>
         )}

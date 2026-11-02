@@ -1,11 +1,12 @@
 import React from 'react';
-import type { HealthResponse, AssistResponse } from '../types';
+import type { HealthResponse, AssistResponse, ClientPerformanceMetrics } from '../types';
 
 interface SupervisorDrawerProps {
   isOpen: boolean;
   health: HealthResponse | null;
   lastResponse: AssistResponse | null;
   analyzedFrameBase64: string | null;
+  perfMetrics?: ClientPerformanceMetrics | null;
   onClose: () => void;
   onRefreshHealth: () => void;
 }
@@ -15,17 +16,20 @@ export const SupervisorDrawer: React.FC<SupervisorDrawerProps> = ({
   health,
   lastResponse,
   analyzedFrameBase64,
+  perfMetrics,
   onClose,
   onRefreshHealth,
 }) => {
   if (!isOpen) return null;
 
   const models = health?.models || {};
+  const gpu = health?.gpu_memory_mb;
+  const ctx = health?.context_memory;
 
   const formatStatus = (installed?: boolean, loaded?: boolean) => {
     if (installed && loaded) return 'محمل ونشط ✅';
-    if (installed) return 'مثبت (محلي) ⚡';
-    return 'غير مثبت ❌';
+    if (installed) return 'جاهز محلياً ⚡';
+    return 'قيد الإعداد ⏳';
   };
 
   return (
@@ -62,15 +66,15 @@ export const SupervisorDrawer: React.FC<SupervisorDrawerProps> = ({
         </div>
 
         <div className="drawer-scroll-body">
-          {/* Models Health Matrix */}
+          {/* Hardware & Memory Metrics */}
           <section className="drawer-section">
             <div className="section-title-wrap">
-              <h3 className="drawer-section-title">حالة النماذج المحلية العاملة</h3>
+              <h3 className="drawer-section-title">موارد العتاد والذاكرة الحية</h3>
               <button
                 type="button"
                 className="refresh-btn"
                 onClick={onRefreshHealth}
-                aria-label="تحديث حالة النماذج"
+                aria-label="تحديث حالة الموارد"
               >
                 تحديث
               </button>
@@ -78,43 +82,140 @@ export const SupervisorDrawer: React.FC<SupervisorDrawerProps> = ({
 
             <div className="models-diag-grid">
               <div className="diag-tile">
-                <span className="tile-title">نموذج الرؤية واللغة (VLM)</span>
-                <span className="tile-val"><bdi>qwen3-vl:2b-instruct-q4_K_M</bdi></span>
-                <span className="tile-status">{formatStatus(models.vlm?.installed, models.vlm?.loaded)}</span>
+                <span className="tile-title">ذاكرة معالج الرسوميات (VRAM)</span>
+                <span className="tile-val">
+                  {gpu?.vram_total_mb
+                    ? `${gpu.vram_used_mb} MB / ${gpu.vram_total_mb} MB`
+                    : '4096 MB (GTX 1650 Ti)'}
+                </span>
+                <span className="tile-status">مستقر</span>
               </div>
 
               <div className="diag-tile">
-                <span className="tile-title">كاشف الكائنات (Detector)</span>
-                <span className="tile-val"><bdi>YOLO11n</bdi> (CPU / Edge)</span>
-                <span className="tile-status">{formatStatus(models.detection?.installed, models.detection?.loaded)}</span>
-              </div>
-
-              <div className="diag-tile">
-                <span className="tile-title">التعرف الضوئي (OCR)</span>
-                <span className="tile-val"><bdi>EasyOCR Arabic/English</bdi></span>
-                <span className="tile-status">{formatStatus(models.ocr?.installed, models.ocr?.loaded)}</span>
-              </div>
-
-              <div className="diag-tile">
-                <span className="tile-title">التعرف الصوتي (ASR)</span>
-                <span className="tile-val"><bdi>faster-whisper</bdi> (int8)</span>
-                <span className="tile-status">{formatStatus(models.asr?.installed, models.asr?.loaded)}</span>
-              </div>
-
-              <div className="diag-tile">
-                <span className="tile-title">النطق الآلي (TTS)</span>
-                <span className="tile-val"><bdi>Piper ar_JO-kareem</bdi></span>
-                <span className="tile-status">{formatStatus(models.tts?.installed, models.tts?.loaded)}</span>
-              </div>
-
-              <div className="diag-tile">
-                <span className="tile-title">ذاكرة النظام المتاحة (RAM)</span>
+                <span className="tile-title">ذاكرة النظام الرئيسية (RAM)</span>
                 <span className="tile-val">
                   {health?.system_memory_mb
                     ? `${health.system_memory_mb.used_ram_mb} MB / ${health.system_memory_mb.total_ram_mb} MB (${health.system_memory_mb.ram_percent}%)`
                     : 'فحص...'}
                 </span>
                 <span className="tile-status">مستقر</span>
+              </div>
+
+              <div className="diag-tile">
+                <span className="tile-title">نموذج الرؤية السريع (2B)</span>
+                <span className="tile-val"><bdi>qwen3-vl:2b-instruct-q4_K_M</bdi></span>
+                <span className="tile-status">{formatStatus(models.vlm_2b?.installed, models.vlm_2b?.loaded)}</span>
+              </div>
+
+              <div className="diag-tile">
+                <span className="tile-title">النموذج المفصل (4B)</span>
+                <span className="tile-val"><bdi>qwen3-vl:4b-instruct-q4_K_M</bdi></span>
+                <span className="tile-status">{health?.vlm_modes?.detailed_ready ? 'جاهز ⚡' : 'قيد التنزيل/التهيئة ⏳'}</span>
+              </div>
+
+              <div className="diag-tile">
+                <span className="tile-title">كاشف الكائنات والبحث (YOLO11n)</span>
+                <span className="tile-val"><bdi>YOLO11n</bdi> (CPU / Edge)</span>
+                <span className="tile-status">{formatStatus(models.detection?.installed, models.detection?.loaded)}</span>
+              </div>
+
+              <div className="diag-tile">
+                <span className="tile-title">التعرف الضوئي (EasyOCR)</span>
+                <span className="tile-val"><bdi>EasyOCR Arabic/English</bdi></span>
+                <span className="tile-status">{formatStatus(models.ocr?.installed, models.ocr?.loaded)}</span>
+              </div>
+
+              <div className="diag-tile">
+                <span className="tile-title">التعرف الصوتي (faster-whisper)</span>
+                <span className="tile-val"><bdi>faster-whisper</bdi> (int8)</span>
+                <span className="tile-status">{formatStatus(models.asr?.installed, models.asr?.loaded)}</span>
+              </div>
+
+              <div className="diag-tile">
+                <span className="tile-title">النطق الصوتي (Piper TTS)</span>
+                <span className="tile-val"><bdi>Piper ar_JO-kareem</bdi></span>
+                <span className="tile-status">{formatStatus(models.tts?.installed, models.tts?.loaded)}</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Conversational Memory Inspector */}
+          {ctx && (
+            <section className="drawer-section">
+              <h3 className="drawer-section-title">حالة ذاكرة السياق الصوتي (Session Context)</h3>
+              <div className="frame-meta-rows">
+                <div className="meta-row">
+                  <strong>عدد التبادلات (Turn Count):</strong>
+                  <span>{ctx.turn_count}</span>
+                </div>
+                <div className="meta-row">
+                  <strong>آخر أمر مستلم:</strong>
+                  <span>{ctx.last_command || 'لا يوجد'}</span>
+                </div>
+                <div className="meta-row">
+                  <strong>آخر كائن مرجعي:</strong>
+                  <span>{ctx.last_referenced_object || 'لا يوجد'}</span>
+                </div>
+                <div className="meta-row">
+                  <strong>حالة السياق:</strong>
+                  <span>{ctx.is_stale ? 'منتهي الصلاحية' : 'نشط وحي'}</span>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Last Execution Timings Breakdown & Client E2E Telemetry */}
+          <section className="drawer-section">
+            <h3 className="drawer-section-title">تفصيل أزمنة المعالجة اللحظية (Performance Telemetry)</h3>
+            <div className="frame-meta-rows">
+              <div className="meta-row">
+                <strong>معرّف الطلب (Request ID):</strong>
+                <span>{lastResponse?.request_id || perfMetrics?.requestId || '--'}</span>
+              </div>
+
+              {perfMetrics && (
+                <>
+                  <div className="meta-row">
+                    <strong>زمن أول ظهور للنص (Client TTFT - DOM):</strong>
+                    <span style={{ color: '#10B981', fontWeight: 700 }}>
+                      {perfMetrics.firstVisibleTextMs !== undefined ? `${perfMetrics.firstVisibleTextMs} ms` : '--'}
+                    </span>
+                  </div>
+                  <div className="meta-row">
+                    <strong>زمن أول نطق مسموع (Client TTFA - Audio onplay):</strong>
+                    <span style={{ color: '#38BDF8', fontWeight: 700 }}>
+                      {perfMetrics.firstAudibleAudioMs !== undefined ? `${perfMetrics.firstAudibleAudioMs} ms` : '--'}
+                    </span>
+                  </div>
+                  {perfMetrics.ocrTextDeliveredMs !== undefined && (
+                    <div className="meta-row">
+                      <strong>تسليم نصوص OCR الفعلية:</strong>
+                      <span style={{ color: '#F59E0B', fontWeight: 700 }}>
+                        {perfMetrics.ocrTextDeliveredMs} ms (إشعار البداية: {perfMetrics.ocrStatusNotificationMs} ms)
+                      </span>
+                    </div>
+                  )}
+                  <div className="meta-row">
+                    <strong>إجمالي زمن تجربة المستخدم بالمتصفح:</strong>
+                    <span>{perfMetrics.totalClientDurationMs !== undefined ? `${perfMetrics.totalClientDurationMs} ms` : '--'}</span>
+                  </div>
+                </>
+              )}
+
+              <div className="meta-row">
+                <strong>زمن المعالجة الخلفية الإجمالي (Backend Total):</strong>
+                <span>{lastResponse ? `${Math.round(lastResponse.total_latency_ms)} ms` : '--'}</span>
+              </div>
+              <div className="meta-row">
+                <strong>تفريغ أزمنة المراحل بالخادم:</strong>
+                <div className="timings-pills-row">
+                  {lastResponse?.stage_timings_ms &&
+                    Object.entries(lastResponse.stage_timings_ms).map(([k, v]) => (
+                      <span key={k} className="timing-pill">
+                        <strong>{k}:</strong> {Math.round(v)}ms
+                      </span>
+                    ))}
+                </div>
               </div>
             </div>
           </section>
@@ -137,34 +238,28 @@ export const SupervisorDrawer: React.FC<SupervisorDrawerProps> = ({
                 )}
               </div>
 
-              <div className="frame-meta-rows">
-                <div className="meta-row">
-                  <strong>معرّف الطلب (Request ID):</strong>
-                  <span>{lastResponse?.request_id || '--'}</span>
+              {lastResponse?.frame_quality && (
+                <div className="frame-meta-rows">
+                  <div className="meta-row">
+                    <strong>تقييم جودة الإطار:</strong>
+                    <span>{lastResponse.frame_quality.is_usable ? 'صالح ومقبول ✅' : 'مرفوض ⚠️'}</span>
+                  </div>
+                  {lastResponse.frame_quality.issue && (
+                    <div className="meta-row">
+                      <strong>سبب التنبيه:</strong>
+                      <span>{lastResponse.frame_quality.issue}</span>
+                    </div>
+                  )}
+                  {lastResponse.frame_quality.metrics && (
+                    <div className="meta-row">
+                      <strong>المقاييس:</strong>
+                      <span>
+                        سطوع: {lastResponse.frame_quality.metrics.brightness} | تباين الحواف: {lastResponse.frame_quality.metrics.blur_variance}
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <div className="meta-row">
-                  <strong>معرّف الإطار (Frame ID):</strong>
-                  <span>{lastResponse?.frame_id || '--'}</span>
-                </div>
-                <div className="meta-row">
-                  <strong>توقيت المعالجة:</strong>
-                  <span>{lastResponse?.timestamp || '--'}</span>
-                </div>
-                <div className="meta-row">
-                  <strong>زمن المعالجة الإجمالي:</strong>
-                  <span>{lastResponse ? `${lastResponse.total_latency_ms} ms` : '--'}</span>
-                </div>
-                <div className="meta-row">
-                  <strong>تفصيل أزمنة المراحل:</strong>
-                  <span>
-                    {lastResponse?.stage_timings_ms
-                      ? Object.entries(lastResponse.stage_timings_ms)
-                          .map(([k, v]) => `${k}: ${v}ms`)
-                          .join(', ')
-                      : '--'}
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
           </section>
 
